@@ -80,6 +80,22 @@ def move_next_helper_right(start, i, end):
       s += "persons.line["+str(end)+"] "
    return s
 
+def move_both_left_and_right(i, j, start1, end1, compare1, start2, end2, compare2) :
+   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start1, i, end1)+"<= "+ str(compare1) +" & "+move_next_helper_right(start2, i, end2)+"<= "+ str(compare2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
+   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start1, i, end1)+">= "+ str(compare1) +" & "+move_next_helper_right(start2, i, end2)+" >= "+ str(compare2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n"
+   return string
+
+def move_right(i, j, start, end, compare) :
+   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(start, i, end)+"<= "+ str(compare) +" : {"+ str(i+j) +"};\n" 
+   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(start, i, end)+">= "+ str(compare) +" : {"+ str(i+j) +"};\n"
+   return string
+
+def move_left(i, j, start, end, compare) :
+   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start, i, end)+"<= "+ str(compare) +" : {"+ str(i-j) +"};\n"   
+   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start, i, end)+">= "+ str(compare) +" : {"+ str(i-j) +"};\n"
+   return string
+
+
 def move_next(size, n) :
    string = ''
    for i in range(1, size+1):
@@ -88,97 +104,56 @@ def move_next(size, n) :
          if (i-j>=1) & (i+j<=size) :
             if (i+j+n <= size) & (i-j-n<1) :
                if (i+j-n>=1) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" & "+move_next_helper_right(i+j-n, i, i+j+n)+"<= "+ str(n) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" & "+move_next_helper_right(i+j-n, i, i+j+n)+" >= "+ str(n) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(i+j-n, i, i+j+n)+"<= "+ str(n) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(i+j-n, i, i+j+n)+">= "+ str(n) +" : {"+ str(i+j) +"};\n"
+                  string += move_both_left_and_right(i, j, 1, i-j+n, i-j-1+(n//2), i+j-n, i+j+n, n) 
+                  string += move_left(i, j, 1, i-j+n, i-j-1+(n//2)) + move_right(i, j, i+j-n, i+j+n, n)
                else :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" & "+move_next_helper_right(1, i, i-j+n)+"<= "+ str(n) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" & "+move_next_helper_right(1, i, i-j+n)+" >= "+ str(n) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(1, i, i+j+n)+"<= "+ str(i-j-1+(n//2)) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(1, i, i+j+n)+">= "+ str(i-j-1+(n//2)) +" : {"+ str(i+j) +"};\n"
+                  string += move_both_left_and_right(i, j, 1, i-j+n, i-j-1+(n//2), 1, i+j+n, i-j-1+(n//2)) 
+                  string += move_left(i, j, 1, i-j+n, i-j-1+(n//2)) + move_right(i, j, 1, i+j+n, i-j-1+(n//2))
+
             elif (i+j+n>size) & (i-j-n>=1) :
                if (i-j+n <= size) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(i-j-n, i, i-j+n)+"<= "+ str(n) +" & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(i-j-n, i, i-j+n)+">= "+ str(n) +" & "+move_next_helper_right(i+j-n, i, size)+" >= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(i-j-n, i, i-j+n)+"<= "+ str(n) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(i-j-n, i, i-j+n)+">= "+ str(n) +" : {"+ str(i-j) +"};\n"
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(i+j-n, i, size)+">= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n"
+                  string += move_both_left_and_right(i, j, i-j-n, i-j+n, n, i+j-n, size, size-i-j+(n//2)) 
+                  string += move_left(i, j, i-j-n, i-j+n, n) + move_right(i, j, i+j-n, size, size-i-j+(n//2))
                else :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(i-j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(i-j-n, i, size)+">= "+ str(size-i-j + (n//2)) +" & "+move_next_helper_right(i+j-n, i, size)+" >= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(i-j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(i-j-n, i, size)+">= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +"};\n"
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(i+j-n, i, size)+">= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n"
+                  string += move_both_left_and_right(i, j, i-j-n, size, size-i-j+(n//2), i+j-n, size, size-i-j+(n//2)) 
+                  string += move_left(i, j, i-j-n, size, size-i-j+(n//2)) + move_right(i, j, i+j-n, size, size-i-j+(n//2))
+
             elif (i+j+n>size) & (i-j-n<1) :
                if (i-j+n<=size) & (i+j-n>=1) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" & "+move_next_helper_right(i+j-n, i, size)+" >= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(i+j-n, i, size)+">= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n"
-
+                  string += move_both_left_and_right(i, j, 1, i-j+n, i-j-1+(n//2), i+j-n, size, size-i-j+(n//2)) 
+                  string += move_left(i, j, 1, i-j+n, i-j-1+(n//2)) + move_right(i, j, i+j-n, size, size-i-j+(n//2))  
                elif (i-j+n<=size) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" & "+move_next_helper_right(1, i, size)+"<= "+ str(size-2*j-1) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" & "+move_next_helper_right(1, i, size)+" >= "+ str(size-2*j-1) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(1, i, size)+"<= "+ str(size-2*j-1) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(1, i, size)+">= "+ str(size-2*j-1) +" : {"+ str(i+j) +"};\n"
-
+                  string += move_both_left_and_right(i, j, 1, i-j+n, i-j-1+(n//2), 1, size, size-2*j-1) 
+                  string += move_left(i, j, 1, i-j+n, i-j-1+(n//2)) + move_right(i, j, 1, size, size-2*j-1)
                elif (i+j-n>=1) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, size)+"<= "+ str(size-2*j-1) +" & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, size)+">= "+ str(size-2*j-1) +" & "+move_next_helper_right(i+j-n, i, size)+" >= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, size)+"<= "+ str(size-2*j-1) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, size)+">= "+ str(size-2*j-1) +" : {"+ str(i-j) +"};\n"
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(i+j-n, i, size)+">= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n"
-
+                  string += move_both_left_and_right(i, j, 1, size, size-2*j-1, i+j-n, size, size-i-j+(n//2)) 
+                  string += move_left(i, j, 1, size, size-2*j-1) + move_right(i, j, i+j-n, size, size-i-j+(n//2))
 
             elif (i+j+n<= size) & (i-j-n>=1) :
-               string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(i-j-n, i, i-j+n)+"<= "+ str(n) +" & "+move_next_helper_right(i+j-n, i, i+j+n)+"<= "+ str(n) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-               string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(i-j-n, i, i-j+n)+">= "+ str(n) +" & "+move_next_helper_right(i+j-n, i, i+j+n)+" >= "+ str(n) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-               string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(i-j-n, i, i-j+n)+"<= "+ str(n) +" : {"+ str(i-j) +"};\n"   
-               string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(i-j-n, i, i-j+n)+">= "+ str(n) +" : {"+ str(i-j) +"};\n"
-               string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(i+j-n, i, i+j+n)+"<= "+ str(n) +" : {"+ str(i+j) +"};\n" 
-               string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(i+j-n, i, i+j+n)+">= "+ str(n) +" : {"+ str(i+j) +"};\n"
+               string += move_both_left_and_right(i, j, i-j-n, i-j+n, n, i+j-n, i+j+n, n) 
+               string += move_left(i, j, i-j-n, i-j+n, n) + move_right(i, j, i+j-n, i+j+n, n)
          elif (i-j>=1) :
             if (i-j-n<1) :
                if (i-j+n<=size) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, i-j+n)+"<= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, i-j+n)+">= "+ str(i-j-1+(n//2)) +" : {"+ str(i-j) +"};\n"
+                  string += move_left(i, j, 1, i-j+n, i-j-1+(n//2))
                else :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(1, i, size)+"<= "+ str(size-2*j-1) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(1, i, size)+">= "+ str(size-2*j-1) +" : {"+ str(i-j) +"};\n"
+                  string += move_left(i, j, 1, size, size-2*j-1)
             else :
                if (i-j+n<=size) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(i-j-n, i, i-j+n)+"<= "+ str(n) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(i-j-n, i, i-j+n)+">= "+ str(n) +" : {"+ str(i-j) +"};\n"
+                  string += move_left(i, j, i-j-n, i-j+n, n)
                else :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(i-j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +"};\n"   
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(i-j-n, i, size)+">= "+ str(size-i-j + (n//2)) +" : {"+ str(i-j) +"};\n"
+                  string += move_left(i, j, i-j-n, size, size-i-j+(n//2))
          elif (i+j<=size) : 
             if (i+j-n>=1) :
                if (i+j+n<=size) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(i+j-n, i, i+j+n)+"<= "+ str(n) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(i+j-n, i, i+j+n)+">= "+ str(n) +" : {"+ str(i+j) +"};\n"
+                  string += move_right(i, j, i+j-n, i+j+n, n)
                else :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(i+j-n, i, size)+"<= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(i+j-n, i, size)+">= "+ str(size-i-j + (n//2)) +" : {"+ str(i+j) +"};\n"
+                  string += move_right(i, j, i+j-n, size, size-i-j+(n//2))
             else :
                if (i+j+n<=size) :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(1, i, i+j+n)+"<= "+ str(i-j-1+(n//2)) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(1, i, i+j+n)+">= "+ str(i-j-1+(n//2)) +" : {"+ str(i+j) +"};\n"
+                  string += move_right(i, j, 1, i+j+n, i-j-1+(n//2))
                else :
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(1, i, size)+"<= "+ str(size-2*j-1) +" : {"+ str(i+j) +"};\n" 
-                  string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(1, i, size)+">= "+ str(size-2*j-1) +" : {"+ str(i+j) +"};\n"
+                  string += move_right(i, j, 1, size, size-2*j-1)
 
    return string
 
