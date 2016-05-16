@@ -15,7 +15,7 @@ def happy_init_helper(start,i,end):
    s += "line["+str(end)+"] - line["+str(i)+"] "
    return s
 
-def happy_init(size):
+def happy_init(size, n):
    string = ''
    if n >= size :
       for i in range(1, size+1):
@@ -40,7 +40,7 @@ def happy_next_helper(start,i,end):
    s += "next(line["+str(end)+"]) - next(line["+str(i)+"]) "
    return s
 
-def happy_next(size):
+def happy_next(size, n):
    string = ''
    if n >= size :
       for i in range(1, size+1):
@@ -98,7 +98,7 @@ def move_left(i, j, start, end) :
    return string
 
 
-def move_next(size) :
+def move_next(size, n) :
    string = ''
    for i in range(1, size+1):
       string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = TRUE : "+ str(i) +";\n"
@@ -199,11 +199,11 @@ def create():
 		'\t\t\t\tTRUE : line[' + str(size) + '];\n'
 		'\t\t\tesac;\n\n'
       '-- We initialise the happiness status.\n\n'
-      +happy_init(size) + '\n\n'
+      +happy_init(size, n) + '\n\n'
 
       '-- This is how the hapiness statuses change in the line when the person in\n'
 		'-- old_pos moves to new_pos.\n\n'
-      +happy_next(size) + '\n\n'      
+      +happy_next(size, n) + '\n\n'      
       
       '-- The main module has an old_pos variable. The value of this variable is\n'
       '-- always arbitrary from 1 to 5. If, at a step, old_pos = 3, then we represent\n'
@@ -223,7 +223,7 @@ def create():
       '\tASSIGN\n'
 		'\t\tnext(new_pos) :=\n'
 			'\t\t\tcase\n'
-         + move_next(size)+
+         + move_next(size, n)+
          '\t\t\t\tTRUE : old_pos;\n' 
 			'\t\tesac;\n\n\n')
 
