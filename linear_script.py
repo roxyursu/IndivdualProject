@@ -9,7 +9,7 @@ def init_line(size):
          if (j==0 or j==1) :
             break
          print("Try again!\n")
-      s += "\t\tinit(line["+ str(i) +"]) := "+ str(j) +"\n"
+      s += "\t\tinit(line["+ str(i) +"]) := "+ str(j) +";\n"
    return s
 
 
@@ -251,8 +251,8 @@ def create():
 
       'MODULE main\n'
 	   '\tVAR\n'
-      '\t\told_pos: 1..5;\n'   
-      '\t\tnew_pos: 1..5;\n'
+      '\t\told_pos: 1..' + str(size) + ';\n'   
+      '\t\tnew_pos: 1..' + str(size) + ';\n'
       '\t\tpersons: line(old_pos,new_pos);\n\n'
 
       '\tASSIGN\n'
@@ -262,7 +262,7 @@ def create():
          '\t\t\t\tTRUE : old_pos;\n' 
 			'\t\tesac;\n\n'
       'SPEC\n'
-      '\tAF AG (!change);\n\n\n')
+      '\tAF AG (!persons.change);\n\n\n')
 
      file.close()
    except:
