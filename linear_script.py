@@ -1,6 +1,18 @@
 import sys
-import math
 import numpy as np
+
+def init_line(size):
+   s = ""
+   for i in range (1, size+1) :
+      while True :
+         j = int(input ("Enter the colour of the player "+ str(i) +" (0 for black or 1 for white):"))
+         if (j==0 or j==1) :
+            break
+         print("Try again!\n")
+      s += "\t\tinit(line["+ str(i) +"]) := "+ str(j) +"\n"
+   return s
+
+
 def change_pos(size):
    string = ''
    if size > 2:
@@ -57,6 +69,14 @@ def happy_next(size, n):
          else :
             string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(i-n,i,i+n) +" <= "+ str(n) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(i-n,i,i+n)+" >= "+ str(n) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
    return string
+
+def change_next(size) :
+   s = "\t\tnext(change) := \n"
+   s += "\t\t\tcase \n"
+   for i in range (1, size+1) :
+      s += "\t\t\t\tline["+str(i)+"] != next(line["+str(i)+"]) : TRUE;\n"
+   s += "\t\t\t\tTRUE : FALSE;\n \t\t\tesac;\n"
+   return s
 
 def move_next_helper_left(start, i, end):
    s = ""
@@ -182,16 +202,20 @@ def create():
       '-- position in the line. So happy[2]=TRUE represents that the person at\n'
       '-- position 2 is happy.\n'
       '-- The module takes as input old_pos (the current position of the person to\n'
-      '-- move) and new_pos (the new position of the person to move)\n\n'
+      '-- move) and new_pos (the new position of the person to move)\n'
+      '-- The boolean variable -change- is true if at least one happiness status changed\n'
+      '-- It is false if no happiness status changed\n\n'
       'MODULE line(old_pos,new_pos)\n'
 	   '\tVAR\n'
       '\t\tline  : array 1..' + str(size) + ' of 0..1;\n' 
-	   '\t\thappy : array 1..' + str(size) + ' of boolean;\n\n'
+	   '\t\thappy : array 1..' + str(size) + ' of boolean;\n'
+      '\t\tchange : boolean; \n\n'
       '\tASSIGN\n\n'
-
-		'-- This is how the colours change in the line when the person in\n'
-		'-- old_pos moves to new_pos. Note that we do not initialise the line\n'
-		'-- array; we let NuSMV to give arbitrary initial colours.\n\n'
+      '-- Initialise the line with zeros and ones that are passed as an input\n'
+      '-- i.e. Construct the initial line configuration\n\n'
+      + init_line(size) +
+		'\n-- This is how the colours change in the line when the person in\n'
+		'-- old_pos moves to new_pos.\n\n'
       '\t\tnext(line[1]) :=\n'
 		'\t\t\tcase\n'
 		'\t\t\t\tnew_pos = 1 : line[old_pos]; \n'   
@@ -211,10 +235,13 @@ def create():
 
       '-- This is how the hapiness statuses change in the line when the person in\n'
 		'-- old_pos moves to new_pos.\n\n'
-      +happy_next(size, n) + '\n\n'      
+      +happy_next(size, n) + '\n\n' 
+
+      '\t\tinit(change) := FALSE;\n\n'    
+      +change_next(size) + 
       
       '-- The main module has an old_pos variable. The value of this variable is\n'
-      '-- always arbitrary from 1 to 5. If, at a step, old_pos = 3, then we represent\n'
+      '-- always arbitrary from 1 to n. If, at a step, old_pos = 3, then we represent\n'
       '-- that is the turn of the person in position 3 to move. If this person is\n'
       '-- already happy (i.e., in the module above happy[3] = TRUE), then it remains\n'
       '-- in the same position (i.e., we set the new_pos variable below to 3).\n'
@@ -233,7 +260,9 @@ def create():
 			'\t\t\tcase\n'
          + move_next(size, n)+
          '\t\t\t\tTRUE : old_pos;\n' 
-			'\t\tesac;\n\n\n')
+			'\t\tesac;\n\n'
+      'SPEC\n'
+      '\tAF AG (!change);\n\n\n')
 
      file.close()
    except:
