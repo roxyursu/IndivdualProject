@@ -65,9 +65,9 @@ def move_next_helper_left(start, i, end):
          s += "persons.line["+str(j)+"] + "
       s += "persons.line["+str(end)+"] - persons.line["+str(i)+"] "
    else :
-      for j in range (start, end):
+      for j in range (start, end-1):
          s += "persons.line["+str(j)+"] + "
-      s += "persons.line["+str(end)+"] "
+      s += "persons.line["+str(end-1)+"] "
    return s
 
 def move_next_helper_right(start, i, end):
@@ -82,19 +82,27 @@ def move_next_helper_right(start, i, end):
       s += "persons.line["+str(end)+"] "
    return s
 
+
+def compare_0(i, start, end) :
+   return str(int(np.floor((end-start)/2.0)))
+
+def compare_1(i, start, end) :
+   return str(int(np.ceil((end-start)/2.0)))
+
+
 def move_both_left_and_right(i, j, start1, end1, start2, end2) :
-   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start1, i, end1)+"<= "+ str(int(np.floor((end1-start1)/2.0))) +" & "+move_next_helper_right(start2, i, end2)+"<= "+ str(int(np.floor((end2-start2)/2.0))) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start1, i, end1)+">= "+ str(int(np.ceil((end1-start1)/2.0))) +" & "+move_next_helper_right(start2, i, end2)+" >= "+ str(int(np.ceil((end2-start2)/2.0))) +" : {"+ str(i-j) +","+ str(i+j) +"};\n"
+   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start1, i, end1)+"<= "+ compare_0(i, start1, end1) +" & "+move_next_helper_right(start2, i, end2)+"<= "+ compare_0(i, start2, end2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
+   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start1, i, end1)+">= "+ compare_1(i, start1, end1) +" & "+move_next_helper_right(start2, i, end2)+" >= "+ compare_1(i, start2, end2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n"
    return string
 
 def move_right(i, j, start, end) :
-   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(start, i, end)+"<= "+ str(int(np.floor((end-start)/2.0))) +" : {"+ str(i+j) +"};\n" 
-   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(start, i, end)+">= "+ str(int(np.ceil((end-start)/2.0))) +" : {"+ str(i+j) +"};\n"
+   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(start, i, end)+"<= "+ compare_0(i, start, end) +" : {"+ str(i+j) +"};\n" 
+   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i+j) +"};\n"
    return string
 
 def move_left(i, j, start, end) :
-   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start, i, end)+"<= "+ str(int(np.floor((end-start)/2.0))) +" : {"+ str(i-j) +"};\n"   
-   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start, i, end)+">= "+ str(int(np.ceil((end-start)/2.0))) +" : {"+ str(i-j) +"};\n"
+   string  = "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start, i, end)+"<= "+ compare_0(i, start, end) +" : {"+ str(i-j) +"};\n"   
+   string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i-j) +"};\n"
    return string
 
 
