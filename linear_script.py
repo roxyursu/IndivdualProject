@@ -75,7 +75,25 @@ def change_next(size) :
    s += "\t\t\tcase \n"
    for i in range (1, size+1) :
       s += "\t\t\t\tline["+str(i)+"] != next(line["+str(i)+"]) : TRUE;\n"
-   s += "\t\t\t\tTRUE : FALSE;\n \t\t\tesac;\n"
+   s += "\t\t\t\tTRUE : FALSE;\n \t\t\tesac;\n\n"
+   return s
+
+def sep_table_init(size) :
+   s = ""
+   for i in range (1, size+1) :
+      s += "\t\tinit(separation_table["+str(i)+"]) := \n"
+      s += "\t\t\tcase \n"
+      s += "\t\t\t\tline["+str(i)+"] != line["+str(i+1)+"] : 1;\n"
+      s += "\t\t\t\tTRUE : 0;\n \t\t\tesac;\n\n"
+   return s
+
+def sep_table_next(size) :
+   s = ""
+   for i in range (1, size+1) :
+      s += "\t\tnext(separation_table["+str(i)+"]) := \n"
+      s += "\t\t\tcase \n"
+      s += "\t\t\t\tnext(line["+str(i)+"]) != next(line["+str(i+1)+"]) : 1;\n"
+      s += "\t\t\t\tTRUE : 0;\n \t\t\tesac;\n\n"
    return s
 
 def move_next_helper_left(start, i, end):
@@ -187,7 +205,12 @@ def move_next(size, n) :
 
    return string
 
-
+def complete_segregation(size) :
+   s = ""
+   for i in range(1, size-1) :
+      s += "persons.separation_table["+ str(i) +"] +"
+   s += "persons.separation_table["+ str(size-1) +"] "
+   return s
 
 def create():
    print("creating new  file")
@@ -200,16 +223,24 @@ def create():
       '-- represents that there is a black person at position 3. It also has a\n'
       '-- boolean array called happy representing whether the happiness status of each\n'
       '-- position in the line. So happy[2]=TRUE represents that the person at\n'
-      '-- position 2 is happy.\n'
+      '-- position 2 is happy.\n\n'
+
       '-- The module takes as input old_pos (the current position of the person to\n'
-      '-- move) and new_pos (the new position of the person to move)\n'
+      '-- move) and new_pos (the new position of the person to move)\n\n'
+
       '-- The boolean variable -change- is true if at least one happiness status changed\n'
       '-- It is false if no happiness status changed\n\n'
+
+      '-- Separation table is an array of size (n-1) of integers 1 and 0\n'
+      '-- separation_table[i] is 1 if line[i] != line[i+1], 0 otherwise\n\n'      
+
       'MODULE line(old_pos,new_pos)\n'
 	   '\tVAR\n'
       '\t\tline  : array 1..' + str(size) + ' of 0..1;\n' 
 	   '\t\thappy : array 1..' + str(size) + ' of boolean;\n'
-      '\t\tchange : boolean; \n\n'
+      '\t\tchange : boolean; \n'
+      '\t\tseparation_table : array 1..' + str(size) + ' of 0..1;\n\n' 
+
       '\tASSIGN\n\n'
       '-- Initialise the line with zeros and ones that are passed as an input\n'
       '-- i.e. Construct the initial line configuration\n\n'
@@ -237,8 +268,13 @@ def create():
 		'-- old_pos moves to new_pos.\n\n'
       +happy_next(size, n) + '\n\n' 
 
+      '-- Initilise change variable \n'
       '\t\tinit(change) := FALSE;\n\n'    
       +change_next(size) + 
+      
+      '-- Create the separation_table array\n'
+      +sep_table_init(size-1) + 
+      sep_table_next(size-1) +
       
       '-- The main module has an old_pos variable. The value of this variable is\n'
       '-- always arbitrary from 1 to n. If, at a step, old_pos = 3, then we represent\n'
@@ -262,7 +298,10 @@ def create():
          '\t\t\t\tTRUE : old_pos;\n' 
 			'\t\tesac;\n\n'
       'SPEC\n'
-      '\tAF AG (!persons.change);\n\n\n')
+      '\tAF AG (!persons.change);\n\n'
+      
+      'SPEC\n'
+      '\tAF ('+complete_segregation(size)+'=1 | '+complete_segregation(size)+'=0);\n\n\n')
 
      file.close()
    except:
