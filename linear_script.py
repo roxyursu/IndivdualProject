@@ -74,7 +74,7 @@ def change_next(size) :
    s = "\t\tnext(change) := \n"
    s += "\t\t\tcase \n"
    for i in range (1, size+1) :
-      s += "\t\t\t\tline["+str(i)+"] != next(line["+str(i)+"]) : TRUE;\n"
+      s += "\t\t\t\thappy["+str(i)+"] != next(happy["+str(i)+"]) : TRUE;\n"
    s += "\t\t\t\tTRUE : FALSE;\n \t\t\tesac;\n\n"
    return s
 

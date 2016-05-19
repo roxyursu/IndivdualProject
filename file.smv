@@ -16,10 +16,10 @@
 
 MODULE line(old_pos,new_pos)
 	VAR
-		line  : array 1..10 of 0..1;
-		happy : array 1..10 of boolean;
+		line  : array 1..4 of 0..1;
+		happy : array 1..4 of boolean;
 		change : boolean; 
-		separation_table : array 1..10 of 0..1;
+		separation_table : array 1..4 of 0..1;
 
 	ASSIGN
 
@@ -28,14 +28,8 @@ MODULE line(old_pos,new_pos)
 
 		init(line[1]) := 1;
 		init(line[2]) := 1;
-		init(line[3]) := 1;
+		init(line[3]) := 0;
 		init(line[4]) := 0;
-		init(line[5]) := 0;
-		init(line[6]) := 0;
-		init(line[7]) := 0;
-		init(line[8]) := 1;
-		init(line[9]) := 1;
-		init(line[10]) := 1;
 
 -- This is how the colours change in the line when the person in
 -- old_pos moves to new_pos.
@@ -62,113 +56,35 @@ MODULE line(old_pos,new_pos)
 			esac; 
 		next(line[4]) :=
 			case
-				new_pos =  4 : line[old_pos];
-				new_pos > old_pos &  4 >= old_pos &  4 < new_pos : line[5];
+				new_pos = 4 : line[old_pos]; 
 				new_pos < old_pos & 4 > new_pos & 4 <= old_pos : line[3];
 				TRUE : line[4];
-			esac; 
-		next(line[5]) :=
-			case
-				new_pos =  5 : line[old_pos];
-				new_pos > old_pos &  5 >= old_pos &  5 < new_pos : line[6];
-				new_pos < old_pos & 5 > new_pos & 5 <= old_pos : line[4];
-				TRUE : line[5];
-			esac; 
-		next(line[6]) :=
-			case
-				new_pos =  6 : line[old_pos];
-				new_pos > old_pos &  6 >= old_pos &  6 < new_pos : line[7];
-				new_pos < old_pos & 6 > new_pos & 6 <= old_pos : line[5];
-				TRUE : line[6];
-			esac; 
-		next(line[7]) :=
-			case
-				new_pos =  7 : line[old_pos];
-				new_pos > old_pos &  7 >= old_pos &  7 < new_pos : line[8];
-				new_pos < old_pos & 7 > new_pos & 7 <= old_pos : line[6];
-				TRUE : line[7];
-			esac; 
-		next(line[8]) :=
-			case
-				new_pos =  8 : line[old_pos];
-				new_pos > old_pos &  8 >= old_pos &  8 < new_pos : line[9];
-				new_pos < old_pos & 8 > new_pos & 8 <= old_pos : line[7];
-				TRUE : line[8];
-			esac; 
-		next(line[9]) :=
-			case
-				new_pos =  9 : line[old_pos];
-				new_pos > old_pos &  9 >= old_pos &  9 < new_pos : line[10];
-				new_pos < old_pos & 9 > new_pos & 9 <= old_pos : line[8];
-				TRUE : line[9];
-			esac; 
-		next(line[10]) :=
-			case
-				new_pos = 10 : line[old_pos]; 
-				new_pos < old_pos & 10 > new_pos & 10 <= old_pos : line[9];
-				TRUE : line[10];
 			esac;
 
 -- We initialise the happiness status.
 
 		init(happy[1]) :=
 			case 
-				line[1] = 0 & line[1] + line[2] + line[3] - line[1]  <= 1 : TRUE;
-				line[1] = 1 & line[1] + line[2] + line[3] - line[1]  >= 1 : TRUE;
+				line[1] = 0 & line[1] + line[2] - line[1]  <= 1 : TRUE;
+				line[1] = 1 & line[1] + line[2] - line[1]  >= 1 : TRUE;
 				TRUE: FALSE;
 			esac;
 		init(happy[2]) :=
 			case 
-				line[2] = 0 & line[1] + line[2] + line[3] + line[4] - line[2]  <= 2 : TRUE;
-				line[2] = 1 & line[1] + line[2] + line[3] + line[4] - line[2]  >= 2 : TRUE;
+				line[2] = 0 & line[1] + line[2] + line[3] - line[2]  <= 1 : TRUE;
+				line[2] = 1 & line[1] + line[2] + line[3] - line[2]  >= 1 : TRUE;
 				TRUE: FALSE;
 			esac;
 		init(happy[3]) :=
 			case 
-				line[3] = 0 & line[1] + line[2] + line[3] + line[4] + line[5] - line[3]  <= 2 : TRUE;
-				line[3] = 1 & line[1] + line[2] + line[3] + line[4] + line[5] - line[3]  >= 2 : TRUE;
+				line[3] = 0 & line[2] + line[3] + line[4] - line[3]  <= 1 : TRUE;
+				line[3] = 1 & line[2] + line[3] + line[4] - line[3]  >= 1 : TRUE;
 				TRUE: FALSE;
 			esac;
 		init(happy[4]) :=
 			case 
-				line[4] = 0 & line[2] + line[3] + line[4] + line[5] + line[6] - line[4]  <= 2 : TRUE;
-				line[4] = 1 & line[2] + line[3] + line[4] + line[5] + line[6] - line[4]  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		init(happy[5]) :=
-			case 
-				line[5] = 0 & line[3] + line[4] + line[5] + line[6] + line[7] - line[5]  <= 2 : TRUE;
-				line[5] = 1 & line[3] + line[4] + line[5] + line[6] + line[7] - line[5]  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		init(happy[6]) :=
-			case 
-				line[6] = 0 & line[4] + line[5] + line[6] + line[7] + line[8] - line[6]  <= 2 : TRUE;
-				line[6] = 1 & line[4] + line[5] + line[6] + line[7] + line[8] - line[6]  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		init(happy[7]) :=
-			case 
-				line[7] = 0 & line[5] + line[6] + line[7] + line[8] + line[9] - line[7]  <= 2 : TRUE;
-				line[7] = 1 & line[5] + line[6] + line[7] + line[8] + line[9] - line[7]  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		init(happy[8]) :=
-			case 
-				line[8] = 0 & line[6] + line[7] + line[8] + line[9] + line[10] - line[8]  <= 2 : TRUE;
-				line[8] = 1 & line[6] + line[7] + line[8] + line[9] + line[10] - line[8]  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		init(happy[9]) :=
-			case 
-				line[9] = 0 & line[7] + line[8] + line[9] + line[10] - line[9]  <= 2 : TRUE;
-				line[9] = 1 & line[7] + line[8] + line[9] + line[10] - line[9]  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		init(happy[10]) :=
-			case 
-				line[10] = 0 & line[8] + line[9] + line[10] - line[10]  <= 1 : TRUE;
-				line[10] = 1 & line[8] + line[9] + line[10] - line[10]  >= 1 : TRUE;
+				line[4] = 0 & line[3] + line[4] - line[4]  <= 1 : TRUE;
+				line[4] = 1 & line[3] + line[4] - line[4]  >= 1 : TRUE;
 				TRUE: FALSE;
 			esac;
 
@@ -178,62 +94,26 @@ MODULE line(old_pos,new_pos)
 
 		next(happy[1]) :=
 			case 
-				next(line[1]) = 0 & next(line[1]) +next(line[2]) + next(line[3]) - next(line[1])  <= 1 : TRUE;
-				next(line[1]) = 1 & next(line[1]) +next(line[2]) + next(line[3]) - next(line[1])  >= 1 : TRUE;
+				next(line[1]) = 0 & next(line[1]) +next(line[2]) - next(line[1])  <= 1 : TRUE;
+				next(line[1]) = 1 & next(line[1]) +next(line[2]) - next(line[1])  >= 1 : TRUE;
 				TRUE: FALSE;
 			esac;
 		next(happy[2]) :=
 			case 
-				next(line[2]) = 0 & next(line[1]) +next(line[2]) + next(line[3]) + next(line[4]) - next(line[2])  <= 2 : TRUE;
-				next(line[2]) = 1 & next(line[1]) +next(line[2]) + next(line[3]) + next(line[4]) - next(line[2])  >= 2 : TRUE;
+				next(line[2]) = 0 & next(line[1]) +next(line[2]) + next(line[3]) - next(line[2])  <= 1 : TRUE;
+				next(line[2]) = 1 & next(line[1]) +next(line[2]) + next(line[3]) - next(line[2])  >= 1 : TRUE;
 				TRUE: FALSE;
 			esac;
 		next(happy[3]) :=
 			case 
-				next(line[3]) = 0 & next(line[1]) +next(line[2]) + next(line[3]) + next(line[4]) + next(line[5]) - next(line[3])  <= 2 : TRUE;
-				next(line[3]) = 1 & next(line[1]) +next(line[2]) + next(line[3]) + next(line[4]) + next(line[5]) - next(line[3])  >= 2 : TRUE;
+				next(line[3]) = 0 & next(line[2]) +next(line[3]) + next(line[4]) - next(line[3])  <= 1 : TRUE;
+				next(line[3]) = 1 & next(line[2]) +next(line[3]) + next(line[4]) - next(line[3])  >= 1 : TRUE;
 				TRUE: FALSE;
 			esac;
 		next(happy[4]) :=
 			case 
-				next(line[4]) = 0 & next(line[2]) +next(line[3]) + next(line[4]) + next(line[5]) + next(line[6]) - next(line[4])  <= 2 : TRUE;
-				next(line[4]) = 1 & next(line[2]) +next(line[3]) + next(line[4]) + next(line[5]) + next(line[6]) - next(line[4])  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		next(happy[5]) :=
-			case 
-				next(line[5]) = 0 & next(line[3]) +next(line[4]) + next(line[5]) + next(line[6]) + next(line[7]) - next(line[5])  <= 2 : TRUE;
-				next(line[5]) = 1 & next(line[3]) +next(line[4]) + next(line[5]) + next(line[6]) + next(line[7]) - next(line[5])  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		next(happy[6]) :=
-			case 
-				next(line[6]) = 0 & next(line[4]) +next(line[5]) + next(line[6]) + next(line[7]) + next(line[8]) - next(line[6])  <= 2 : TRUE;
-				next(line[6]) = 1 & next(line[4]) +next(line[5]) + next(line[6]) + next(line[7]) + next(line[8]) - next(line[6])  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		next(happy[7]) :=
-			case 
-				next(line[7]) = 0 & next(line[5]) +next(line[6]) + next(line[7]) + next(line[8]) + next(line[9]) - next(line[7])  <= 2 : TRUE;
-				next(line[7]) = 1 & next(line[5]) +next(line[6]) + next(line[7]) + next(line[8]) + next(line[9]) - next(line[7])  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		next(happy[8]) :=
-			case 
-				next(line[8]) = 0 & next(line[6]) +next(line[7]) + next(line[8]) + next(line[9]) + next(line[10]) - next(line[8])  <= 2 : TRUE;
-				next(line[8]) = 1 & next(line[6]) +next(line[7]) + next(line[8]) + next(line[9]) + next(line[10]) - next(line[8])  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		next(happy[9]) :=
-			case 
-				next(line[9]) = 0 & next(line[7]) +next(line[8]) + next(line[9]) + next(line[10]) - next(line[9])  <= 2 : TRUE;
-				next(line[9]) = 1 & next(line[7]) +next(line[8]) + next(line[9]) + next(line[10]) - next(line[9])  >= 2 : TRUE;
-				TRUE: FALSE;
-			esac;
-		next(happy[10]) :=
-			case 
-				next(line[10]) = 0 & next(line[8]) +next(line[9]) + next(line[10]) - next(line[10])  <= 1 : TRUE;
-				next(line[10]) = 1 & next(line[8]) +next(line[9]) + next(line[10]) - next(line[10])  >= 1 : TRUE;
+				next(line[4]) = 0 & next(line[3]) +next(line[4]) - next(line[4])  <= 1 : TRUE;
+				next(line[4]) = 1 & next(line[3]) +next(line[4]) - next(line[4])  >= 1 : TRUE;
 				TRUE: FALSE;
 			esac;
 
@@ -243,16 +123,10 @@ MODULE line(old_pos,new_pos)
 
 		next(change) := 
 			case 
-				line[1] != next(line[1]) : TRUE;
-				line[2] != next(line[2]) : TRUE;
-				line[3] != next(line[3]) : TRUE;
-				line[4] != next(line[4]) : TRUE;
-				line[5] != next(line[5]) : TRUE;
-				line[6] != next(line[6]) : TRUE;
-				line[7] != next(line[7]) : TRUE;
-				line[8] != next(line[8]) : TRUE;
-				line[9] != next(line[9]) : TRUE;
-				line[10] != next(line[10]) : TRUE;
+				happy[1] != next(happy[1]) : TRUE;
+				happy[2] != next(happy[2]) : TRUE;
+				happy[3] != next(happy[3]) : TRUE;
+				happy[4] != next(happy[4]) : TRUE;
 				TRUE : FALSE;
  			esac;
 
@@ -275,42 +149,6 @@ MODULE line(old_pos,new_pos)
 				TRUE : 0;
  			esac;
 
-		init(separation_table[4]) := 
-			case 
-				line[4] != line[5] : 1;
-				TRUE : 0;
- 			esac;
-
-		init(separation_table[5]) := 
-			case 
-				line[5] != line[6] : 1;
-				TRUE : 0;
- 			esac;
-
-		init(separation_table[6]) := 
-			case 
-				line[6] != line[7] : 1;
-				TRUE : 0;
- 			esac;
-
-		init(separation_table[7]) := 
-			case 
-				line[7] != line[8] : 1;
-				TRUE : 0;
- 			esac;
-
-		init(separation_table[8]) := 
-			case 
-				line[8] != line[9] : 1;
-				TRUE : 0;
- 			esac;
-
-		init(separation_table[9]) := 
-			case 
-				line[9] != line[10] : 1;
-				TRUE : 0;
- 			esac;
-
 		next(separation_table[1]) := 
 			case 
 				next(line[1]) != next(line[2]) : 1;
@@ -329,42 +167,6 @@ MODULE line(old_pos,new_pos)
 				TRUE : 0;
  			esac;
 
-		next(separation_table[4]) := 
-			case 
-				next(line[4]) != next(line[5]) : 1;
-				TRUE : 0;
- 			esac;
-
-		next(separation_table[5]) := 
-			case 
-				next(line[5]) != next(line[6]) : 1;
-				TRUE : 0;
- 			esac;
-
-		next(separation_table[6]) := 
-			case 
-				next(line[6]) != next(line[7]) : 1;
-				TRUE : 0;
- 			esac;
-
-		next(separation_table[7]) := 
-			case 
-				next(line[7]) != next(line[8]) : 1;
-				TRUE : 0;
- 			esac;
-
-		next(separation_table[8]) := 
-			case 
-				next(line[8]) != next(line[9]) : 1;
-				TRUE : 0;
- 			esac;
-
-		next(separation_table[9]) := 
-			case 
-				next(line[9]) != next(line[10]) : 1;
-				TRUE : 0;
- 			esac;
-
 -- The main module has an old_pos variable. The value of this variable is
 -- always arbitrary from 1 to n. If, at a step, old_pos = 3, then we represent
 -- that is the turn of the person in position 3 to move. If this person is
@@ -376,243 +178,45 @@ MODULE line(old_pos,new_pos)
 
 MODULE main
 	VAR
-		old_pos: 1..10;
-		new_pos: 1..10;
+		old_pos: 1..4;
+		new_pos: 1..4;
 		persons: line(old_pos,new_pos);
 
 	ASSIGN
 		next(new_pos) :=
 			case
 				old_pos=1 & persons.happy[1] = TRUE : 1;
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[1] <= 1 : {2};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[1] >= 2 : {2};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[1] <= 2 : {3};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[1] >= 2 : {3};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] <= 2 : {4};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] >= 2 : {4};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] <= 2 : {5};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] >= 2 : {5};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] <= 2 : {6};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {6};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] <= 2 : {7};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] >= 2 : {7};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] <= 2 : {8};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {8};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[8] + persons.line[9] + persons.line[10] <= 1 : {9};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {9};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[9] + persons.line[10] <= 1 : {10};
-				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[9] + persons.line[10] >= 1 : {10};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[1] <= 1 : {2};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[1] >= 1 : {2};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[3] + persons.line[4] <= 1 : {3};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[3] + persons.line[4] >= 1 : {3};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[4] <= 0 : {4};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[4] >= 1 : {4};
 				old_pos=2 & persons.happy[2] = TRUE : 2;
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[2] <= 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[2] <= 2 : {1,3};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[2] >= 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[2]  >= 2 : {1,3};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[2] <= 1 : {1};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[2] >= 1 : {1};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[2] <= 2 : {3};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[2] >= 2 : {3};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[2] <= 2 : {4};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[2] >= 2 : {4};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] <= 2 : {5};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] >= 2 : {5};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] <= 2 : {6};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {6};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] <= 2 : {7};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] >= 2 : {7};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] <= 2 : {8};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {8};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[8] + persons.line[9] + persons.line[10] <= 1 : {9};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {9};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[9] + persons.line[10] <= 1 : {10};
-				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[9] + persons.line[10] >= 1 : {10};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] - persons.line[2] <= 0 & persons.line[2] + persons.line[3] + persons.line[4] - persons.line[2] <= 1 : {1,3};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] - persons.line[2] >= 1 & persons.line[2] + persons.line[3] + persons.line[4] - persons.line[2]  >= 1 : {1,3};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] - persons.line[2] <= 0 : {1};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] - persons.line[2] >= 1 : {1};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[2] + persons.line[3] + persons.line[4] - persons.line[2] <= 1 : {3};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[2] + persons.line[3] + persons.line[4] - persons.line[2] >= 1 : {3};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[4] <= 0 : {4};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[4] >= 1 : {4};
 				old_pos=3 & persons.happy[3] = TRUE : 3;
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[3] <= 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[3] <= 2 : {2,4};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[3] >= 2 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[3]  >= 2 : {2,4};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[3] <= 1 : {2};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[3] >= 2 : {2};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[3] <= 2 : {4};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[3] >= 2 : {4};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] <= 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[3] <= 2 : {1,5};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] >= 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[3]  >= 2 : {1,5};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] <= 1 : {1};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] >= 1 : {1};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[3] <= 2 : {5};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[3] >= 2 : {5};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] <= 2 : {6};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {6};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] <= 2 : {7};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] >= 2 : {7};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] <= 2 : {8};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {8};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[8] + persons.line[9] + persons.line[10] <= 1 : {9};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {9};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[9] + persons.line[10] <= 1 : {10};
-				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[9] + persons.line[10] >= 1 : {10};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] <= 1 & persons.line[3] + persons.line[4] - persons.line[3] <= 0 : {2,4};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] >= 1 & persons.line[3] + persons.line[4] - persons.line[3]  >= 1 : {2,4};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] <= 1 : {2};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] >= 1 : {2};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[3] + persons.line[4] - persons.line[3] <= 0 : {4};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[3] + persons.line[4] - persons.line[3] >= 1 : {4};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] <= 0 : {1};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] >= 1 : {1};
 				old_pos=4 & persons.happy[4] = TRUE : 4;
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[4] <= 2 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[4] <= 2 : {3,5};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[4] >= 2 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[4]  >= 2 : {3,5};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[4] <= 2 : {3};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[4] >= 2 : {3};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[4] <= 2 : {5};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[4] >= 2 : {5};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] <= 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[4] <= 2 : {2,6};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] >= 2 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[4]  >= 2 : {2,6};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] <= 1 : {2};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] >= 2 : {2};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[4] <= 2 : {6};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[4] >= 2 : {6};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] <= 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] <= 2 : {1,7};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] >= 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9]  >= 2 : {1,7};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] <= 2 : {7};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] >= 2 : {7};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] <= 2 : {8};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {8};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[8] + persons.line[9] + persons.line[10] <= 1 : {9};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {9};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[9] + persons.line[10] <= 1 : {10};
-				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[9] + persons.line[10] >= 1 : {10};
-				old_pos=5 & persons.happy[5] = TRUE : 5;
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[5] <= 2 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] <= 2 : {4,6};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[5] >= 2 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5]  >= 2 : {4,6};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[5] <= 2 : {4};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[5] >= 2 : {4};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] <= 2 : {6};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] >= 2 : {6};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[5] <= 2 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[5] <= 2 : {3,7};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[5] >= 2 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[5]  >= 2 : {3,7};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[5] <= 2 : {3};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[5] >= 2 : {3};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[5] <= 2 : {7};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[5] >= 2 : {7};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] <= 2 : {2,8};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10]  >= 2 : {2,8};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] <= 2 : {8};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {8};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] <= 1 & persons.line[8] + persons.line[9] + persons.line[10] <= 1 : {1,9};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] >= 1 & persons.line[8] + persons.line[9] + persons.line[10]  >= 2 : {1,9};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[8] + persons.line[9] + persons.line[10] <= 1 : {9};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {9};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[9] + persons.line[10] <= 1 : {10};
-				old_pos=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[9] + persons.line[10] >= 1 : {10};
-				old_pos=6 & persons.happy[6] = TRUE : 6;
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[6] <= 2 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[6] <= 2 : {5,7};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[6] >= 2 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[6]  >= 2 : {5,7};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[6] <= 2 : {5};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[6] >= 2 : {5};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[6] <= 2 : {7};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[6] >= 2 : {7};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[6] <= 2 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[6] <= 2 : {4,8};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[6] >= 2 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[6]  >= 2 : {4,8};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[6] <= 2 : {4};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[6] >= 2 : {4};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[6] <= 2 : {8};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[6] >= 2 : {8};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 & persons.line[8] + persons.line[9] + persons.line[10] <= 1 : {3,9};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 & persons.line[8] + persons.line[9] + persons.line[10]  >= 2 : {3,9};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 : {3};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 : {3};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[8] + persons.line[9] + persons.line[10] <= 1 : {9};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[8] + persons.line[9] + persons.line[10] >= 2 : {9};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 & persons.line[9] + persons.line[10] <= 1 : {2,10};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 & persons.line[9] + persons.line[10]  >= 1 : {2,10};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[9] + persons.line[10] <= 1 : {10};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[9] + persons.line[10] >= 1 : {10};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				old_pos=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				old_pos=7 & persons.happy[7] = TRUE : 7;
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] <= 2 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[7] <= 2 : {6,8};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] >= 2 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[7]  >= 2 : {6,8};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] <= 2 : {6};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] >= 2 : {6};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[7] <= 2 : {8};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[7] >= 2 : {8};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[7] <= 2 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[7] <= 1 : {5,9};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[7] >= 2 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[7]  >= 2 : {5,9};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[7] <= 2 : {5};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[7] >= 2 : {5};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[7] <= 1 : {9};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[7] >= 2 : {9};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] <= 2 & persons.line[9] + persons.line[10] <= 1 : {4,10};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] >= 2 & persons.line[9] + persons.line[10]  >= 1 : {4,10};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] <= 2 : {4};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] >= 2 : {4};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[9] + persons.line[10] <= 1 : {10};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[9] + persons.line[10] >= 1 : {10};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 : {3};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 : {3};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				old_pos=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				old_pos=8 & persons.happy[8] = TRUE : 8;
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[8] <= 2 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[8] <= 1 : {7,9};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[8] >= 2 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[8]  >= 2 : {7,9};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[8] <= 2 : {7};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[8] >= 2 : {7};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[8] <= 1 : {9};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[8] >= 2 : {9};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[8] <= 2 & persons.line[8] + persons.line[9] + persons.line[10] - persons.line[8] <= 1 : {6,10};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[8] >= 2 & persons.line[8] + persons.line[9] + persons.line[10] - persons.line[8]  >= 1 : {6,10};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[8] <= 2 : {6};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[8] >= 2 : {6};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[8] + persons.line[9] + persons.line[10] - persons.line[8] <= 1 : {10};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[8] + persons.line[9] + persons.line[10] - persons.line[8] >= 1 : {10};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] <= 2 : {5};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] >= 2 : {5};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] <= 2 : {4};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] >= 2 : {4};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 : {3};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 : {3};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				old_pos=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				old_pos=9 & persons.happy[9] = TRUE : 9;
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[9] <= 2 & persons.line[8] + persons.line[9] + persons.line[10] - persons.line[9] <= 1 : {8,10};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[9] >= 2 & persons.line[8] + persons.line[9] + persons.line[10] - persons.line[9]  >= 1 : {8,10};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[9] <= 2 : {8};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[9] >= 2 : {8};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[8] + persons.line[9] + persons.line[10] - persons.line[9] <= 1 : {10};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[8] + persons.line[9] + persons.line[10] - persons.line[9] >= 1 : {10};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[9] <= 2 : {7};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] - persons.line[9] >= 2 : {7};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] <= 2 : {6};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] >= 2 : {6};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] <= 2 : {5};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] >= 2 : {5};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] <= 2 : {4};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] >= 2 : {4};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 : {3};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 : {3};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				old_pos=9 & persons.happy[9] = FALSE & persons.line[9] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				old_pos=10 & persons.happy[10] = TRUE : 10;
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[10] <= 1 : {9};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[10] >= 2 : {9};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[10] <= 2 : {8};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[6] + persons.line[7] + persons.line[8] + persons.line[9] + persons.line[10] - persons.line[10] >= 2 : {8};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] <= 2 : {7};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {7};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] <= 2 : {6};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] >= 2 : {6};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] <= 2 : {5};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] >= 2 : {5};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] <= 2 : {4};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] >= 2 : {4};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 : {3};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 : {3};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				old_pos=10 & persons.happy[10] = FALSE & persons.line[10] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
+				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] <= 1 : {3};
+				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] >= 1 : {3};
+				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] <= 1 : {2};
+				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] >= 1 : {2};
+				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] <= 0 : {1};
+				old_pos=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] >= 1 : {1};
 				TRUE : old_pos;
 		esac;
 
@@ -620,6 +224,6 @@ SPEC
 	AF AG (!persons.change);
 
 SPEC
-	AF (persons.separation_table[1] +persons.separation_table[2] +persons.separation_table[3] +persons.separation_table[4] +persons.separation_table[5] +persons.separation_table[6] +persons.separation_table[7] +persons.separation_table[8] +persons.separation_table[9] =1 | persons.separation_table[1] +persons.separation_table[2] +persons.separation_table[3] +persons.separation_table[4] +persons.separation_table[5] +persons.separation_table[6] +persons.separation_table[7] +persons.separation_table[8] +persons.separation_table[9] =0);
+	AF (persons.separation_table[1] +persons.separation_table[2] +persons.separation_table[3] =1 | persons.separation_table[1] +persons.separation_table[2] +persons.separation_table[3] =0);
 
 
