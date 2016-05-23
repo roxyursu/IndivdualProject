@@ -87,6 +87,12 @@ def sep_table_init(size) :
       s += "\t\t\t\tTRUE : 0;\n \t\t\tesac;\n\n"
    return s
 
+def fairness_constraint(size) :
+   s = ""
+   for i in range (1, size+1) :
+      s += "\tFAIRNESS old_pos = "+str(i)+"\n"
+   return s
+
 def sep_table_next(size) :
    s = ""
    for i in range (1, size+1) :
@@ -275,6 +281,7 @@ def create():
       '-- Create the separation_table array\n'
       +sep_table_init(size-1) + 
       sep_table_next(size-1) +
+      '\n\n'
       
       '-- The main module has an old_pos variable. The value of this variable is\n'
       '-- always arbitrary from 1 to n. If, at a step, old_pos = 3, then we represent\n'
@@ -297,6 +304,8 @@ def create():
          + move_next(size, n)+
          '\t\t\t\tTRUE : old_pos;\n' 
 			'\t\tesac;\n\n'
+
+      + fairness_constraint(size) +
       'SPEC\n'
       '\tAF AG (!persons.change);\n\n'
       

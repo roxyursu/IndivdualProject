@@ -10,6 +10,7 @@
 \usepackage{caption}
 \usepackage{placeins}
 \usepackage{afterpage}
+\usepackage{amsmath}
 
 \usepackage{pgfplots}
 \usepackage{xcolor}
@@ -123,12 +124,23 @@ Text
 \newpage
 \pagenumbering{arabic}
 \section{Introduction}
+In 1917, Marquis Converse produced the very first basketball-only shoes (or sneakers), named Converse All Stars. In the same year, Chuck Taylor started wearing them as a high school basketball player at Columbus High School and in 1921, Taylor started working with Converse to improve the design by enhancing the flexibility and support of the shoes. The new, improved design became known as the Chuck Taylor All-Stars and they are the best selling basketball shoes of all times.
+
+Shortly after, in 1924, the sneakers went internationally with a German man named Adi Dassle who created the first Adidas sneaker, followed by his brother Rudi who started another famous sports shoe company: Puma.
+
+Although in the first part of the 20th century, sneakers were worn only by people practicing sports, in 1950s, children, teens and young adults started wearing them as a fashion statement. Sneakers became even more famous after they appeared in movies such as Rebel Without a Cause. Nowadays, sneakers have a place in almost everyone's wardrobe and they are  not considered as a shoe worn only during sports activities anymore. Although wearing sports shoes in our day-to-day life might be because of an increase in comfort level, the case is not that clear. What we can clearly notice is how fashion spread gradually because of people emulated the behaviour of others. 
+
+An average 120,000,000 pairs of Nike shoes are sold each year\cite{nike} and the numbers are expected to rise. This is just one example where the people's "independence" assumption fails. There are plenty of papers studying just this, how our decisions on where to live, what to wear, what to eat, etc are influenced not only by the value of the goods, but by the choices people around us do. Some of the papers focus on some of the very serious problems of our society like dropping out of school, smoking, committing crimes. Here, we could mention Jonathan Crane 1991\cite{crane}; William Evans, Wallace Oates, Robert Schwab 1992\cite{evans}; and George Akerlof 1997\cite{akerlof}. Also Peyton Young 2001\cite{young} discuss A Dynamic Model of Conformity.
+
+The "dual" situation is the one in which individuals do not change their behaviours, but they prefer to move to neighbourhoods where people have same interests as oneself. This is a model that was first published by Schelling in 1971 \cite{schelling}. We are going to look at Schelling's linear model in detail in this paper. The two problems may seem completely different, but there are similar aggregate properties. We are going to see how segregated patterns (spatially homogeneous patters) are more likely to emerge than heterogeneous patters in a final configuration.
+
 \subsection{Motivation}
 Social network is a representation of social agents (such as individuals, organisations or software), a social connection and a social interaction between the agents. The connection could be a virtual connection and hence we are mainly talking about interaction over the Internet, over different on-line, social-media platforms, or we could be referring to a physical connection such as people living in the same house, or the same city, or going to the same school. They would have a real-life interaction.
 
 Whatever the connection or the interaction type, understanding how the relations affect individual decision-making could help predicting how the system will evolve. Furthermore, we want to understand how even a individual bias which might be considered insignificant, could have a large impact over the overall system. 
 
 We live in a world where segregation, be it ethical or economical, is still present at every step, in all societies, even in developed, modern cities like London. There is a huge interest in finding a way to combat any further segregation, but this is not easy and the consequences of people's low tolerances can be seen everywhere. \textit{Poor doors: the segregation of London's inner-city flat dwellers}\cite{article1} and \textit{What would a ban on 'poor doors' achieve?} \cite{article2} are only two articles published by \textit{The Guardian} \cite{guardian} that are presenting serious concerns that people and governments have regarding the economic segregation that is happening in London, UK.
+
 
 \newpage
 
@@ -139,13 +151,22 @@ We are also going to try and prove a series of affirmations that Schelling is ma
 
 The last part of the project will focus on considering more sophisticated models that would include economical and social aspects. We would like to find new pattern models using Schelling's models as starting point and comparing the new patters with the real-world patterns. Ultimately, we would like to find a possible solution to today's segregation problem.
 
- 
+ \newpage
+\subsection{Contribution}
+
+\newpage
+\subsection{Report Outline}
 \newpage
 
-\section{Background}
+\section{General Background}
+\subsection{Emergent Behaviour}
+
+
 \subsection{Segregation Overview}
 \textbf{Segregation} is the separation of humans into ethnic or racial groups in daily life. It may apply to activities such as eating in a restaurant, drinking from a water fountain, using a public toilet, attending school, going to the movies, riding on a bus, or in the rental or purchase of a home.\cite{segregation}
 
+\newpage
+\section{Schelling's Model}
 \subsection{Schelling's Dynamic Models Of Segregation - Overview}
 Racial segregation has always been a major social problem in the world and especially in the US. Despite all efforts, racial and economical segregation is still happening nowadays. But why is it so hard to eradicate segregation?
 
@@ -518,7 +539,8 @@ In order to automatically test the models that Schelling described in his paper,
 
 
 \newpage
-\section{Formal definitions}
+\section{Formal Analysis}
+\subsection{Definitions}
 \verb|N| is a finite set of all players/agents. \verb|B|, \verb|W| are the sets of black and white agents, respectively. We assume that:
 
 \[ N = B \cup W\]
@@ -560,21 +582,21 @@ For example, the following two permutations are \textbf{similar}:
 A \textbf{configuration} is just one element of \verb|C|.
 
 A \textbf{turn} function is a function $ \tau : \pi \rightarrow N $ such that 
-\[ \tau (\pi) = \tau(\pi')\mbox{if } \pi\mbox{ is similar to }\pi'\]
+\[ \tau (\pi) = \tau(\pi')\mbox{ if } \pi\mbox{ is similar to }\pi'\]
 Turn function associates to each permutation one player.\\
 
-Given a configuration [$\pi$] of length {\bf n}=$|\pi|$ and the neighbourhood size \verb|k|, we define the left and right neighbourhoods of player $\pi(i)$:
-\[ L_k(\pi(i)) = 
+Given a configuration [$\pi$] of length {\bf n}=$|\pi|$ and the neighbourhood size \verb|k|, we define the left and right neighbourhoods of player $i$, fixing the permutation $\pi$. Notice here that the neighbourhood of player $i$ does not comprise himself.
+\[ L_k(i) = 
   \begin{cases}
-    \bigcup\limits_{j=1}^{i-1} \pi(j)      & \quad \text{for } i< k\\
-    \bigcup\limits_{j=i-k}^{i-1} \pi(j)      & \quad \text{for } i \geq k\\
+    \bigcup\limits_{j=1}^{i-1} j  & \quad \text{for } i< k\\
+    \bigcup\limits_{j=i-k}^{i-1} j & \quad \text{for } i \geq k\\
   \end{cases}
 \]
 
-\[ R_k(\pi(i)) = 
+\[ R_k(i) = 
   \begin{cases}
-    \bigcup\limits_{j=i+1}^{n} \pi(j)      & \quad \text{for } i> n-k\\
-    \bigcup\limits_{j=i+1}^{i+k} \pi(j)      & \quad \text{for } i \leq n-k\\
+    \bigcup\limits_{j=i+1}^{n} j      & \quad \text{for } i> n-k\\
+    \bigcup\limits_{j=i+1}^{i+k} j      & \quad \text{for } i \leq n-k\\
   \end{cases}
 \]
 
@@ -590,7 +612,7 @@ Let $d_i$ be the demand of player i.
  
 $ i\in B$ implies that $N_i \cap B \geq d_i$.
 
- In general you want that $d_i$ is at least $\frac{1}{2}$.
+ In general, we want that $d_i$ is at least $\frac{1}{2}$.
 
 This can be written as the union of black and whites in that neighbourhood:
 \[ N_i = W_i \cup B_i \]
@@ -604,15 +626,37 @@ A player is \textbf{happy} if at least 50\% of its neighbourhood is the same col
   \end{cases}
 \] where $|A|$ is the cardinality of set A, \verb|i.e.| the number of elements in A.
 
-\section{On the impact of turn function}
+\newpage
+\subsection{On the impact of turn function}
 In this section, we are looking at how configurations are affected by different turn functions. The final configurations we are looking for must be:
 
 \begin{itemize}
-    \item Stable
-    \item Segregation problem is minimal
+    \item Stable - We say that a configuration reaches a stable point if at some point in the future no unhappy people can improve.
+    \item Segregation problem is minimal - We are looking for the least segregated final configuration. That is, when in a line of two types of agents, we have the largest number groups (white and blacks) alternating. For example, in the \verb|Configuration 1| below we can distinguish 5 groups while in \verb|Configuration 2| we have only 3 groups. Hence, \verb|Configuration 1| is least segregated. 
+    \begin{table}[H]
+    \begin{center}
+    {\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|c|c|c|}
+    \hline
+    \x &\x &\x &\z &\z &\z  &\z &\x &\x & \z &\z & \z& \x&\x&\x&\x\\
+     \hline
+    \end{tabular}}
+    \end{center}
+    \caption*{Configuration 1}
+    \end{table}
+    
+    \begin{table}[H]
+    \begin{center}
+    {\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|c|c|c|}
+    \hline
+    \x &\x &\x &\x &\z &\z  &\z &\z &\z & \z &\z & \x& \x&\x&\x&\x\\
+     \hline
+    \end{tabular}}
+    \end{center}
+    \caption*{Configuration 2}
+    \end{table}
 \end{itemize}
 
-\subsection{Turn function in Schelling's model}
+\subsubsection{Turn function in Schelling's model}
 Schelling's segregation model uses a specific turn function. Here is how this turn function works.
 
 \textbf{Step 1: }Given an initial configuration and a neighbourhood size, \verb|n|, we first mark all the unhappy agents. 
@@ -702,7 +746,7 @@ Finally we move the last unhappy player.
 We reached a final, stable configuration which is clearly segregated. All the circles are clustered together. 
 
 
-\subsection{Examples}
+\subsubsection{Examples}
 Even the turn function used by Schelling is not ideal. With the following examples we will try to explain just why that is the case and what kind of problems we face. Furthermore, we will show what happens when we alternate slightly Schelling's turn function by changing the order in which players can move.
 
 We make the following assumptions: the neighbourhood size is 2 (that is 2 on each side of the player) and that players move to the closest position (either left or right) that makes them content. \verb|i.e.| we are trying to see the impact of different turn functions.
@@ -869,19 +913,19 @@ So far we saw examples that, depending on the order we move the players, the con
 \end{table}
 Players on positions 2 and 9 are unhappy. Regardless of who we choose to move first, the configuration does not converge. Hence, the turn function has no effect on this configuration.
 
-\section{Statements we are trying to prove}
-\subsection{Convergence} 
+\subsection{Convergence and Termination}
+\subsubsection{Convergence} 
  For a given turn function, there exists a configuration where moving any unhappy person will not decrease the number of unhappy people.
  
-\subsection{Termination}
+\subsubsection{Termination}
 For every configuration there exists a turn function such that the configuration reaches a fixed point: there exists configuration such that no unhappy person is able to improve.
 
-\subsection{Dichotomous mixing constraint}
+\subsubsection{Dichotomous mixing constraint}
     Not both groups can enjoy numerical superiority. But if each of them insists on being local majority then there is only one mixture that will satisfy them: \textit{complete segregation}.
     
-\section{Proofs we have sketched so far}
+\subsection{Proof Sketches}
 
-\subsection{Convergence}
+\subsubsection{Convergence}
 The following scenario does not converge to a fix point.
 
 Having a turn function where an unhappy agent moves to the closest place that would meet his requirements, \verb|i.e.| make him happy. Also, assume for now that the neighbourhood size is 2. \verb|i.e.| each individual will be interested in the colour of the 2 neighbours of his right and the 2 neighbours on his left. To be content, he wants at least 50\% of these neighbours to be same colour as oneself.
@@ -912,7 +956,7 @@ We have 6 whites, \z, and 6 blacks, \x, and the only unhappy person in this conf
 
 We can see that we are now back to the initial situation since all we did was swapping position of the first and second player. In this configuration, we have again the individual on position 2 being the only unhappy individual. According to the turn function, player \x\ n position 2 will move to the closest position that will meet his demands. This is again position 1. Hence, we are entering an infinite cycle. Therefore, for the given turning function this scenario does not converge to a fixed point.
 
-\subsection{Termination}
+\subsubsection{Termination}
 We are going to show this by relaxing the constraint that you need to go to the closest neighbourhood that makes you happy. We will allow players to go to any neighbourhood.
 
 
@@ -943,7 +987,7 @@ So now, for every individual in the \verb|Random People| that can improve his/he
 
 Hence, the algorithm terminates.
 
-\section{Another approach}
+\subsection{Another approach}
 
 We want to analyse the results for lots of turn functions. We want to find situations where there is no segregation. 
 
@@ -980,8 +1024,12 @@ $\overline{s}$ - segregation false
 
 Notice: number of states is finite.
 
+\newpage
+\section{Simulation - Computational Results}
 
-\section{Project and Evaluation Plan}
+
+\newpage
+\section{Conclusion and Open Questions}
 
 \textbf{Project Plan} \\
 In order to be able to write sophisticated models that could represent real-world situations, we would first have to study and understand simple models, like Schelling's spatial proximity models. First step (which I have already started working on) is using \verb|MATLAB| to test the models and then trying to formally prove a few of the affirmations that Schelling is making. These include a few research questions that we would like to answer, such as:
@@ -1004,6 +1052,33 @@ However, we would still like to move from spatial proximity models to more sophi
 \newpage
 
 \begin{thebibliography}{9}
+\bibitem{nike}
+Nike Company Statistics
+\\\texttt{http://www.statisticbrain.com/nike-company-statistics/}
+
+\bibitem{crane}
+The Epidemic Theory of Ghettos and Neighborhood Effects on Dropping Out and Teenage
+Childbearing\\
+Jonathan Crane\\
+The American Journal of Sociology, Vol. 96, No. 5. (Mar., 1991), pp. 1226-1259
+\\\texttt{http://www.uvm.edu/~pdodds/files/papers/others/1991/crane1991a.pdf}
+
+\bibitem{evans}
+Measuring Peer Group Effects: A Study of Teenage Behavior\\
+William N. Evans; Wallace E. Oates; Robert M. Schwab\\
+The Journal of Political Economy, Vol. 100, No. 5. (Oct., 1992), pp. 966-991
+\\\texttt{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.321.7855\&rep=rep1\&type=pdf}
+
+\bibitem{akerlof}
+Social Distance and Social Decisions\\
+George A. Akerlof\\
+Econometrica, Vol. 65, No. 5 (Sep., 1997), pp. 1005-1027
+\\\texttt{http://www.wcas.northwestern.edu/nescan/akerlof\_1997.pdf}
+
+\bibitem{young}
+H. Peyton Young, The Dynamics of Conformity, Chapter 5 of Social Dynamics
+
+
 \bibitem{article1}
 Poor doors: the segregation of London's inner-city flat dwellers
 \\\texttt{http://www.theguardian.com/society/2014/jul/25/poor-doors
