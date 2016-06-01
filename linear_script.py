@@ -12,13 +12,16 @@ def init_line(size):
       s += "\t\tinit(line["+ str(i) +"]) := "+ str(j) +";\n"
    return s
 
-
 def change_pos(size):
-   string = ''
+   s = ""
    if size > 2:
       for i in range (2, size):
-         string +="\t\tnext(line[" + str(i) + "]) :=\n"+"\t\t\tcase\n" +"\t\t\t\tnew_pos =  "+ str(i) +" : line[old_pos];\n" +"\t\t\t\tnew_pos > old_pos &  "+ str(i) +" >= old_pos &  "+ str(i)   +" < new_pos : line["+str(i+1) +"];\n"+"\t\t\t\tnew_pos < old_pos & "+ str(i) +" > new_pos & "+ str(i)  +" <= old_pos : line["+ str(i-1) +"];\n""\t\t\t\tTRUE : line["+ str(i) +"];\n"+"\t\t\tesac; \n"
-   return string   
+         s +="\t\tnext(line[" + str(i) + "]) :=\n"+"\t\t\tcase\n" 
+         s +="\t\t\t\tnew_pos =  "+ str(i) +" : line[old_pos];\n" 
+         s +="\t\t\t\tnew_pos > old_pos &  "+ str(i) +" >= old_pos &  "+ str(i)   +" < new_pos : line["+str(i+1) +"];\n"
+         s +="\t\t\t\tnew_pos < old_pos & "+ str(i) +" > new_pos & "+ str(i)  +" <= old_pos : line["+ str(i-1) +"];\n"
+         s +="\t\t\t\tTRUE : line["+ str(i) +"];\n"+"\t\t\tesac; \n"
+   return s 
 
 def happy_init_helper(start,i,end):
    s = "line["+str(start)+ "] + "
@@ -149,8 +152,22 @@ def move_left(i, j, start, end) :
    string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i-j) +"};\n"
    return string
 
+def move_both_left_and_right_next(i, j, start1, end1, start2, end2) :
+   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start1, i, end1)+"<= "+ compare_0(i, start1, end1) +" & "+move_next_helper_right(start2, i, end2)+"<= "+ compare_0(i, start2, end2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
+   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start1, i, end1)+">= "+ compare_1(i, start1, end1) +" & "+move_next_helper_right(start2, i, end2)+" >= "+ compare_1(i, start2, end2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n"
+   return string
 
-def move_next(size, n) :
+def move_right_next(i, j, start, end) :
+   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(start, i, end)+"<= "+ compare_0(i, start, end) +" : {"+ str(i+j) +"};\n" 
+   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i+j) +"};\n"
+   return string
+
+def move_left_next(i, j, start, end) :
+   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start, i, end)+"<= "+ compare_0(i, start, end) +" : {"+ str(i-j) +"};\n"   
+   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i-j) +"};\n"
+   return string
+
+def move_init(size, n) :
    string = ''
    for i in range(1, size+1):
       string += "\t\t\t\told_pos="+ str(i) +" & persons.happy["+ str(i) +"] = TRUE : "+ str(i) +";\n"
@@ -208,6 +225,67 @@ def move_next(size, n) :
                   string += move_right(i, j, 1, i+j+n)
                else :
                   string += move_right(i, j, 1, size)
+
+   return string
+
+def move_next(size, n) :
+   string = ""
+   for i in range(1, size+1):
+      string += "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = TRUE : "+ str(i) +";\n"
+      for j in range(1, size) :
+         if (i-j>=1) & (i+j<=size) :
+            if (i+j+n <= size) & (i-j-n<1) :
+               if (i+j-n>=1) :
+                  string += move_both_left_and_right_next(i, j, 1, i-j+n, i+j-n, i+j+n) 
+                  string += move_left_next(i, j, 1, i-j+n) + move_right_next(i, j, i+j-n, i+j+n)
+               else :
+                  string += move_both_left_and_right_next(i, j, 1, i-j+n, 1, i+j+n) 
+                  string += move_left_next(i, j, 1, i-j+n) + move_right_next(i, j, 1, i+j+n)
+
+            elif (i+j+n>size) & (i-j-n>=1) :
+               if (i-j+n <= size) :
+                  string += move_both_left_and_right_next(i, j, i-j-n, i-j+n, i+j-n, size) 
+                  string += move_left_next(i, j, i-j-n, i-j+n) + move_right_next(i, j, i+j-n, size)
+               else :
+                  string += move_both_left_and_right_next(i, j, i-j-n, size, i+j-n, size) 
+                  string += move_left_next(i, j, i-j-n, size) + move_right_next(i, j, i+j-n, size)
+
+            elif (i+j+n>size) & (i-j-n<1) :
+               if (i-j+n<=size) & (i+j-n>=1) :
+                  string += move_both_left_and_right_next(i, j, 1, i-j+n, i+j-n, size) 
+                  string += move_left_next(i, j, 1, i-j+n) + move_right_next(i, j, i+j-n, size)  
+               elif (i-j+n<=size) :
+                  string += move_both_left_and_right_next(i, j, 1, i-j+n, 1, size) 
+                  string += move_left_next(i, j, 1, i-j+n) + move_right_next(i, j, 1, size)
+               elif (i+j-n>=1) :
+                  string += move_both_left_and_right_next(i, j, 1, size, i+j-n, size) 
+                  string += move_left_next(i, j, 1, size) + move_right_next(i, j, i+j-n, size)
+
+            elif (i+j+n<= size) & (i-j-n>=1) :
+               string += move_both_left_and_right_next(i, j, i-j-n, i-j+n, i+j-n, i+j+n) 
+               string += move_left_next(i, j, i-j-n, i-j+n) + move_right_next(i, j, i+j-n, i+j+n)
+         elif (i-j>=1) :
+            if (i-j-n<1) :
+               if (i-j+n<=size) :
+                  string += move_left_next(i, j, 1, i-j+n)
+               else :
+                  string += move_left_next(i, j, 1, size)
+            else :
+               if (i-j+n<=size) :
+                  string += move_left_next(i, j, i-j-n, i-j+n)
+               else :
+                  string += move_left_next(i, j, i-j-n, size)
+         elif (i+j<=size) : 
+            if (i+j-n>=1) :
+               if (i+j+n<=size) :
+                  string += move_right_next(i, j, i+j-n, i+j+n)
+               else :
+                  string += move_right_next(i, j, i+j-n, size)
+            else :
+               if (i+j+n<=size) :
+                  string += move_right_next(i, j, 1, i+j+n)
+               else :
+                  string += move_right_next(i, j, 1, size)
 
    return string
 
@@ -299,10 +377,15 @@ def create():
       '\t\tpersons: line(old_pos,new_pos);\n\n'
 
       '\tASSIGN\n'
+      '\t\tinit(new_pos) :=\n'
+         '\t\t\tcase\n'
+         + move_init(size, n)+
+         '\t\t\t\tTRUE : old_pos;\n' 
+         '\t\tesac;\n\n'
 		'\t\tnext(new_pos) :=\n'
 			'\t\t\tcase\n'
          + move_next(size, n)+
-         '\t\t\t\tTRUE : old_pos;\n' 
+         '\t\t\t\tTRUE : next(old_pos);\n' 
 			'\t\tesac;\n\n'
 
       + fairness_constraint(size) +
