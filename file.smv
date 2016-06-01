@@ -18,7 +18,6 @@ MODULE line(old_pos,new_pos)
 	VAR
 		line  : array 1..8 of 0..1;
 		happy : array 1..8 of boolean;
-		change : boolean; 
 		separation_table : array 1..8 of 0..1;
 
 	ASSIGN
@@ -30,8 +29,8 @@ MODULE line(old_pos,new_pos)
 		init(line[2]) := 1;
 		init(line[3]) := 0;
 		init(line[4]) := 0;
-		init(line[5]) := 1;
-		init(line[6]) := 1;
+		init(line[5]) := 0;
+		init(line[6]) := 0;
 		init(line[7]) := 0;
 		init(line[8]) := 0;
 
@@ -103,7 +102,7 @@ MODULE line(old_pos,new_pos)
 			esac;
 		init(happy[2]) :=
 			case 
-				line[2] = 0 & line[1] + line[2] + line[3] + line[4] - line[2]  <= 2 : TRUE;
+				line[2] = 0 & line[1] + line[2] + line[3] + line[4] - line[2]  <= 1 : TRUE;
 				line[2] = 1 & line[1] + line[2] + line[3] + line[4] - line[2]  >= 2 : TRUE;
 				TRUE: FALSE;
 			esac;
@@ -133,7 +132,7 @@ MODULE line(old_pos,new_pos)
 			esac;
 		init(happy[7]) :=
 			case 
-				line[7] = 0 & line[5] + line[6] + line[7] + line[8] - line[7]  <= 2 : TRUE;
+				line[7] = 0 & line[5] + line[6] + line[7] + line[8] - line[7]  <= 1 : TRUE;
 				line[7] = 1 & line[5] + line[6] + line[7] + line[8] - line[7]  >= 2 : TRUE;
 				TRUE: FALSE;
 			esac;
@@ -156,7 +155,7 @@ MODULE line(old_pos,new_pos)
 			esac;
 		next(happy[2]) :=
 			case 
-				next(line[2]) = 0 & next(line[1]) +next(line[2]) + next(line[3]) + next(line[4]) - next(line[2])  <= 2 : TRUE;
+				next(line[2]) = 0 & next(line[1]) +next(line[2]) + next(line[3]) + next(line[4]) - next(line[2])  <= 1 : TRUE;
 				next(line[2]) = 1 & next(line[1]) +next(line[2]) + next(line[3]) + next(line[4]) - next(line[2])  >= 2 : TRUE;
 				TRUE: FALSE;
 			esac;
@@ -186,7 +185,7 @@ MODULE line(old_pos,new_pos)
 			esac;
 		next(happy[7]) :=
 			case 
-				next(line[7]) = 0 & next(line[5]) +next(line[6]) + next(line[7]) + next(line[8]) - next(line[7])  <= 2 : TRUE;
+				next(line[7]) = 0 & next(line[5]) +next(line[6]) + next(line[7]) + next(line[8]) - next(line[7])  <= 1 : TRUE;
 				next(line[7]) = 1 & next(line[5]) +next(line[6]) + next(line[7]) + next(line[8]) - next(line[7])  >= 2 : TRUE;
 				TRUE: FALSE;
 			esac;
@@ -197,22 +196,6 @@ MODULE line(old_pos,new_pos)
 				TRUE: FALSE;
 			esac;
 
-
--- Initilise change variable 
-		init(change) := FALSE;
-
-		next(change) := 
-			case 
-				happy[1] != next(happy[1]) : TRUE;
-				happy[2] != next(happy[2]) : TRUE;
-				happy[3] != next(happy[3]) : TRUE;
-				happy[4] != next(happy[4]) : TRUE;
-				happy[5] != next(happy[5]) : TRUE;
-				happy[6] != next(happy[6]) : TRUE;
-				happy[7] != next(happy[7]) : TRUE;
-				happy[8] != next(happy[8]) : TRUE;
-				TRUE : FALSE;
- 			esac;
 
 -- Create the separation_table array
 		init(separation_table[1]) := 
@@ -314,6 +297,7 @@ MODULE main
 	VAR
 		old_pos: 1..8;
 		new_pos: 1..8;
+		change : boolean; 
 		persons: line(old_pos,new_pos);
 
 	ASSIGN
@@ -468,152 +452,161 @@ MODULE main
 
 		next(new_pos) :=
 			case
-				next(old_pos)=1 & persons.happy[1] = TRUE : 1;
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[1] <= 1 : {2};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[1] >= 2 : {2};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[1] <= 2 : {3};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[1] >= 2 : {3};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] <= 2 : {4};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] >= 2 : {4};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] <= 2 : {5};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] >= 2 : {5};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] <= 2 : {6};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {6};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[6] + persons.line[7] + persons.line[8] <= 1 : {7};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {7};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[7] + persons.line[8] <= 1 : {8};
-				next(old_pos)=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[7] + persons.line[8] >= 1 : {8};
-				next(old_pos)=2 & persons.happy[2] = TRUE : 2;
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[2] <= 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[2] <= 2 : {1,3};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[2] >= 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[2]  >= 2 : {1,3};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[2] <= 1 : {1};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[2] >= 1 : {1};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[2] <= 2 : {3};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[2] >= 2 : {3};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[2] <= 2 : {4};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[2] >= 2 : {4};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] <= 2 : {5};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] >= 2 : {5};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] <= 2 : {6};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {6};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[6] + persons.line[7] + persons.line[8] <= 1 : {7};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {7};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[7] + persons.line[8] <= 1 : {8};
-				next(old_pos)=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[7] + persons.line[8] >= 1 : {8};
-				next(old_pos)=3 & persons.happy[3] = TRUE : 3;
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[3] <= 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[3] <= 2 : {2,4};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[3] >= 2 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[3]  >= 2 : {2,4};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[3] <= 1 : {2};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[3] >= 2 : {2};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[3] <= 2 : {4};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[3] >= 2 : {4};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] <= 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[3] <= 2 : {1,5};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] >= 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[3]  >= 2 : {1,5};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] <= 1 : {1};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] >= 1 : {1};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[3] <= 2 : {5};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[3] >= 2 : {5};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] <= 2 : {6};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {6};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[6] + persons.line[7] + persons.line[8] <= 1 : {7};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {7};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[7] + persons.line[8] <= 1 : {8};
-				next(old_pos)=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[7] + persons.line[8] >= 1 : {8};
-				next(old_pos)=4 & persons.happy[4] = TRUE : 4;
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[4] <= 2 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[4] <= 2 : {3,5};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[4] >= 2 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[4]  >= 2 : {3,5};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[4] <= 2 : {3};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[4] >= 2 : {3};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[4] <= 2 : {5};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[4] >= 2 : {5};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] <= 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[4] <= 2 : {2,6};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] >= 2 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[4]  >= 2 : {2,6};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] <= 1 : {2};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] - persons.line[4] >= 2 : {2};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[4] <= 2 : {6};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[4] >= 2 : {6};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] <= 1 & persons.line[6] + persons.line[7] + persons.line[8] <= 1 : {1,7};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] >= 1 & persons.line[6] + persons.line[7] + persons.line[8]  >= 2 : {1,7};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[6] + persons.line[7] + persons.line[8] <= 1 : {7};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[6] + persons.line[7] + persons.line[8] >= 2 : {7};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 0 & persons.line[7] + persons.line[8] <= 1 : {8};
-				next(old_pos)=4 & persons.happy[4] = FALSE & persons.line[4] = 1 & persons.line[7] + persons.line[8] >= 1 : {8};
-				next(old_pos)=5 & persons.happy[5] = TRUE : 5;
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[5] <= 2 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] <= 2 : {4,6};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[5] >= 2 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5]  >= 2 : {4,6};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[5] <= 2 : {4};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[5] >= 2 : {4};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] <= 2 : {6};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] >= 2 : {6};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[5] <= 2 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] <= 1 : {3,7};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[5] >= 2 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5]  >= 2 : {3,7};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[5] <= 2 : {3};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] - persons.line[5] >= 2 : {3};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] <= 1 : {7};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[5] >= 2 : {7};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 & persons.line[7] + persons.line[8] <= 1 : {2,8};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 & persons.line[7] + persons.line[8]  >= 1 : {2,8};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[7] + persons.line[8] <= 1 : {8};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[7] + persons.line[8] >= 1 : {8};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				next(old_pos)=5 & persons.happy[5] = FALSE & persons.line[5] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				next(old_pos)=6 & persons.happy[6] = TRUE : 6;
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[6] <= 2 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[6] <= 1 : {5,7};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[6] >= 2 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[6]  >= 2 : {5,7};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[6] <= 2 : {5};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[6] >= 2 : {5};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[6] <= 1 : {7};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[6] >= 2 : {7};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[6] <= 2 & persons.line[6] + persons.line[7] + persons.line[8] - persons.line[6] <= 1 : {4,8};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[6] >= 2 & persons.line[6] + persons.line[7] + persons.line[8] - persons.line[6]  >= 1 : {4,8};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[6] <= 2 : {4};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] - persons.line[6] >= 2 : {4};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[6] + persons.line[7] + persons.line[8] - persons.line[6] <= 1 : {8};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[6] + persons.line[7] + persons.line[8] - persons.line[6] >= 1 : {8};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 : {3};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 : {3};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				next(old_pos)=6 & persons.happy[6] = FALSE & persons.line[6] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				next(old_pos)=7 & persons.happy[7] = TRUE : 7;
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] <= 2 & persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] <= 1 : {6,8};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] >= 2 & persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7]  >= 1 : {6,8};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] <= 2 : {6};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] >= 2 : {6};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] <= 1 : {8};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[6] + persons.line[7] + persons.line[8] - persons.line[7] >= 1 : {8};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[7] <= 2 : {5};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] - persons.line[7] >= 2 : {5};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] <= 2 : {4};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] >= 2 : {4};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 : {3};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 : {3};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				next(old_pos)=7 & persons.happy[7] = FALSE & persons.line[7] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
-				next(old_pos)=8 & persons.happy[8] = TRUE : 8;
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[8] <= 1 : {7};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[8] >= 2 : {7};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[8] <= 2 : {6};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[4] + persons.line[5] + persons.line[6] + persons.line[7] + persons.line[8] - persons.line[8] >= 2 : {6};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] <= 2 : {5};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[3] + persons.line[4] + persons.line[5] + persons.line[6] >= 2 : {5};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] <= 2 : {4};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[2] + persons.line[3] + persons.line[4] + persons.line[5] >= 2 : {4};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] <= 2 : {3};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[1] + persons.line[2] + persons.line[3] + persons.line[4] >= 2 : {3};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[1] + persons.line[2] + persons.line[3] <= 1 : {2};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[1] + persons.line[2] + persons.line[3] >= 2 : {2};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 0 & persons.line[1] + persons.line[2] <= 1 : {1};
-				next(old_pos)=8 & persons.happy[8] = FALSE & persons.line[8] = 1 & persons.line[1] + persons.line[2] >= 1 : {1};
+				next(old_pos)=1 & next(persons.happy[1]) = TRUE : 1;
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[1]) <= 1 : {2};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[1]) >= 2 : {2};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[1]) <= 2 : {3};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[1]) >= 2 : {3};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) <= 2 : {4};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) >= 2 : {4};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) <= 2 : {5};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) >= 2 : {5};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) <= 2 : {6};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) >= 2 : {6};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) <= 1 : {7};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) >= 2 : {7};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[7]) + next(persons.line[8]) <= 1 : {8};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[7]) + next(persons.line[8]) >= 1 : {8};
+				next(old_pos)=2 & next(persons.happy[2]) = TRUE : 2;
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[2]) <= 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[2]) <= 2 : {1,3};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[2]) >= 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[2])  >= 2 : {1,3};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[2]) <= 1 : {1};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[2]) >= 1 : {1};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[2]) <= 2 : {3};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[2]) >= 2 : {3};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[2]) <= 2 : {4};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[2]) >= 2 : {4};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) <= 2 : {5};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) >= 2 : {5};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) <= 2 : {6};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) >= 2 : {6};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) <= 1 : {7};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) >= 2 : {7};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[7]) + next(persons.line[8]) <= 1 : {8};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[7]) + next(persons.line[8]) >= 1 : {8};
+				next(old_pos)=3 & next(persons.happy[3]) = TRUE : 3;
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[3]) <= 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[3]) <= 2 : {2,4};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[3]) >= 2 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[3])  >= 2 : {2,4};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[3]) <= 1 : {2};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[3]) >= 2 : {2};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[3]) <= 2 : {4};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[3]) >= 2 : {4};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[3]) <= 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[3]) <= 2 : {1,5};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[3]) >= 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[3])  >= 2 : {1,5};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[3]) <= 1 : {1};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[3]) >= 1 : {1};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[3]) <= 2 : {5};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[3]) >= 2 : {5};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) <= 2 : {6};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) >= 2 : {6};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) <= 1 : {7};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) >= 2 : {7};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[7]) + next(persons.line[8]) <= 1 : {8};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[7]) + next(persons.line[8]) >= 1 : {8};
+				next(old_pos)=4 & next(persons.happy[4]) = TRUE : 4;
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[4]) <= 2 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[4]) <= 2 : {3,5};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[4]) >= 2 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[4])  >= 2 : {3,5};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[4]) <= 2 : {3};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[4]) >= 2 : {3};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[4]) <= 2 : {5};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[4]) >= 2 : {5};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[4]) <= 1 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[4]) <= 2 : {2,6};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[4]) >= 2 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[4])  >= 2 : {2,6};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[4]) <= 1 : {2};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) - next(persons.line[4]) >= 2 : {2};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[4]) <= 2 : {6};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[4]) >= 2 : {6};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[1]) + next(persons.line[2]) <= 1 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) <= 1 : {1,7};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[1]) + next(persons.line[2]) >= 1 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8])  >= 2 : {1,7};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[1]) + next(persons.line[2]) <= 1 : {1};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[1]) + next(persons.line[2]) >= 1 : {1};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) <= 1 : {7};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) >= 2 : {7};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 0 & next(persons.line[7]) + next(persons.line[8]) <= 1 : {8};
+				next(old_pos)=4 & next(persons.happy[4]) = FALSE & next(persons.line[4]) = 1 & next(persons.line[7]) + next(persons.line[8]) >= 1 : {8};
+				next(old_pos)=5 & next(persons.happy[5]) = TRUE : 5;
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[5]) <= 2 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[5]) <= 2 : {4,6};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[5]) >= 2 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[5])  >= 2 : {4,6};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[5]) <= 2 : {4};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[5]) >= 2 : {4};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[5]) <= 2 : {6};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[5]) >= 2 : {6};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[5]) <= 2 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[5]) <= 1 : {3,7};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[5]) >= 2 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[5])  >= 2 : {3,7};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[5]) <= 2 : {3};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) - next(persons.line[5]) >= 2 : {3};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[5]) <= 1 : {7};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[5]) >= 2 : {7};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) <= 1 & next(persons.line[7]) + next(persons.line[8]) <= 1 : {2,8};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) >= 2 & next(persons.line[7]) + next(persons.line[8])  >= 1 : {2,8};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) <= 1 : {2};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) >= 2 : {2};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[7]) + next(persons.line[8]) <= 1 : {8};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[7]) + next(persons.line[8]) >= 1 : {8};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 0 & next(persons.line[1]) + next(persons.line[2]) <= 1 : {1};
+				next(old_pos)=5 & next(persons.happy[5]) = FALSE & next(persons.line[5]) = 1 & next(persons.line[1]) + next(persons.line[2]) >= 1 : {1};
+				next(old_pos)=6 & next(persons.happy[6]) = TRUE : 6;
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[6]) <= 2 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[6]) <= 1 : {5,7};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[6]) >= 2 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[6])  >= 2 : {5,7};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[6]) <= 2 : {5};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[6]) >= 2 : {5};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[6]) <= 1 : {7};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[6]) >= 2 : {7};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[6]) <= 2 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[6]) <= 1 : {4,8};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[6]) >= 2 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[6])  >= 1 : {4,8};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[6]) <= 2 : {4};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) - next(persons.line[6]) >= 2 : {4};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[6]) <= 1 : {8};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[6]) >= 1 : {8};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) <= 2 : {3};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) >= 2 : {3};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) <= 1 : {2};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) >= 2 : {2};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 0 & next(persons.line[1]) + next(persons.line[2]) <= 1 : {1};
+				next(old_pos)=6 & next(persons.happy[6]) = FALSE & next(persons.line[6]) = 1 & next(persons.line[1]) + next(persons.line[2]) >= 1 : {1};
+				next(old_pos)=7 & next(persons.happy[7]) = TRUE : 7;
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 0 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[7]) <= 2 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[7]) <= 1 : {6,8};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 1 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[7]) >= 2 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[7])  >= 1 : {6,8};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 0 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[7]) <= 2 : {6};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 1 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[7]) >= 2 : {6};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 0 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[7]) <= 1 : {8};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 1 & next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[7]) >= 1 : {8};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 0 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[7]) <= 2 : {5};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) - next(persons.line[7]) >= 2 : {5};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 0 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) <= 2 : {4};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) >= 2 : {4};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) <= 2 : {3};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) >= 2 : {3};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) <= 1 : {2};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) >= 2 : {2};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 0 & next(persons.line[1]) + next(persons.line[2]) <= 1 : {1};
+				next(old_pos)=7 & next(persons.happy[7]) = FALSE & next(persons.line[7]) = 1 & next(persons.line[1]) + next(persons.line[2]) >= 1 : {1};
+				next(old_pos)=8 & next(persons.happy[8]) = TRUE : 8;
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 0 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[8]) <= 1 : {7};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 1 & next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[8]) >= 2 : {7};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 0 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[8]) <= 2 : {6};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 1 & next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) + next(persons.line[7]) + next(persons.line[8]) - next(persons.line[8]) >= 2 : {6};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 0 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) <= 2 : {5};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 1 & next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) + next(persons.line[6]) >= 2 : {5};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 0 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) <= 2 : {4};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 1 & next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) + next(persons.line[5]) >= 2 : {4};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) <= 2 : {3};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) + next(persons.line[4]) >= 2 : {3};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) <= 1 : {2};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) >= 2 : {2};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 0 & next(persons.line[1]) + next(persons.line[2]) <= 1 : {1};
+				next(old_pos)=8 & next(persons.happy[8]) = FALSE & next(persons.line[8]) = 1 & next(persons.line[1]) + next(persons.line[2]) >= 1 : {1};
 				TRUE : next(old_pos);
 		esac;
+
+-- Initilise change variable 
+		init(change) := FALSE;
+
+		next(change) := 
+			case
+				next(old_pos) != next(new_pos) : TRUE;
+				TRUE : FALSE;
+			esac; 
 
 	FAIRNESS old_pos = 1
 	FAIRNESS old_pos = 2
@@ -624,7 +617,7 @@ MODULE main
 	FAIRNESS old_pos = 7
 	FAIRNESS old_pos = 8
 SPEC
-	AF AG (!persons.change);
+	AF AG (!change);
 
 SPEC
 	AF (persons.separation_table[1] +persons.separation_table[2] +persons.separation_table[3] +persons.separation_table[4] +persons.separation_table[5] +persons.separation_table[6] +persons.separation_table[7] =1 | persons.separation_table[1] +persons.separation_table[2] +persons.separation_table[3] +persons.separation_table[4] +persons.separation_table[5] +persons.separation_table[6] +persons.separation_table[7] =0);

@@ -23,6 +23,13 @@ def change_pos(size):
          s +="\t\t\t\tTRUE : line["+ str(i) +"];\n"+"\t\t\tesac; \n"
    return s 
 
+
+def compare_0(i, start, end) :
+   return str(int(np.floor((end-start)/2.0)))
+
+def compare_1(i, start, end) :
+   return str(int(np.ceil((end-start)/2.0)))
+ 
 def happy_init_helper(start,i,end):
    s = "line["+str(start)+ "] + "
    for j in range (start+1, end):
@@ -34,18 +41,18 @@ def happy_init(size, n):
    string = ''
    if n >= size :
       for i in range(1, size+1):
-         string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(1,i,size) +" <= "+ str((size)//2) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(1,i,size)+" >= "+ str((size)//2) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+         string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(1,i,size) +" <= "+ compare_0(i, 1, size) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(1,i,size)+" >= "+ compare_1(i, 1, size) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
    else:
       for i in range(1, size+1):
          if i <= n :
             if i+n > size :
-               string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(1,i,size) +" <= "+ str((size)//2) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(1,i,size)+" >= "+ str((size)//2) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+               string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(1,i,size) +" <= "+compare_0(i, 1, size) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(1,i,size)+" >= "+compare_1(i, 1, size) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
             else :
-               string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(1,i,i+n) +" <= "+ str((i+n)//2) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(1,i,i+n)+" >= "+ str((i+n)//2) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+               string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(1,i,i+n) +" <= "+ compare_0(i, 1, i+n) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(1,i,i+n)+" >= "+ compare_1(i, 1, i+n) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
          elif i >= size-n :
-            string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(i-n,i,size) +" <= "+ str((size-i+n+1)//2) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(i-n,i,size)+" >= "+ str((size-i+n+1)//2) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+            string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(i-n,i,size) +" <= "+ compare_0(i, i-n, size) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(i-n,i,size)+" >= "+ compare_1(i, i-n, size) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
          else :
-            string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(i-n,i,i+n) +" <= "+ str(n) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(i-n,i,i+n)+" >= "+ str(n) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+            string +="\t\tinit(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tline["+ str(i) +"] = 0 & "+ happy_init_helper(i-n,i,i+n) +" <= "+ compare_0(i, i-n, i+n) +" : TRUE;\n" +"\t\t\t\tline["+ str(i) +"] = 1 & "+ happy_init_helper(i-n,i,i+n)+" >= "+ compare_1(i, i-n, i+n) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
    return string
 
 def happy_next_helper(start,i,end):
@@ -59,27 +66,19 @@ def happy_next(size, n):
    string = ''
    if n >= size :
       for i in range(1, size+1):
-         string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(1,i,size) +" <= "+ str((size)//2) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(1,i,size)+" >= "+ str((size)//2) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+         string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(1,i,size) +" <= "+ compare_0(i, 1, size) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(1,i,size)+" >= "+ compare_1(i, 1, size) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
    else:
       for i in range(1, size+1):
          if i <= n :
             if i+n > size :
-               string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(1,i,size) +" <= "+ str((size)//2) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(1,i,size)+" >= "+ str((size)//2) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+               string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(1,i,size) +" <= "+ compare_0(i, 1, size) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(1,i,size)+" >= "+ compare_1(i, 1, size) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
             else :
-               string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(1,i,i+n) +" <= "+ str((i+n)//2) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(1,i,i+n)+" >= "+ str((i+n)//2) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+               string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(1,i,i+n) +" <= "+ compare_0(i, 1, i+n) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(1,i,i+n)+" >= "+ compare_1(i, 1, i+n) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
          elif i >= size-n :
-            string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(i-n,i,size) +" <= "+ str((size-i+n+1)//2) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(i-n,i,size)+" >= "+ str((size-i+n+1)//2) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+            string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(i-n,i,size) +" <= "+ compare_0(i, i-n, size) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(i-n,i,size)+" >= "+ compare_1(i, i-n, size) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
          else :
-            string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(i-n,i,i+n) +" <= "+ str(n) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(i-n,i,i+n)+" >= "+ str(n) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
+            string +="\t\tnext(happy["+ str(i) +"]) :=\n" +"\t\t\tcase \n" +"\t\t\t\tnext(line["+ str(i) +"]) = 0 & "+ happy_next_helper(i-n,i,i+n) +" <= "+ compare_0(i, i-n, i+n) +" : TRUE;\n" +"\t\t\t\tnext(line["+ str(i) +"]) = 1 & "+ happy_next_helper(i-n,i,i+n)+" >= "+ compare_1(i, i-n, i+n) +" : TRUE;\n" +"\t\t\t\tTRUE: FALSE;\n" +"\t\t\tesac;\n"
    return string
-
-def change_next(size) :
-   s = "\t\tnext(change) := \n"
-   s += "\t\t\tcase \n"
-   for i in range (1, size+1) :
-      s += "\t\t\t\thappy["+str(i)+"] != next(happy["+str(i)+"]) : TRUE;\n"
-   s += "\t\t\t\tTRUE : FALSE;\n \t\t\tesac;\n\n"
-   return s
 
 def sep_table_init(size) :
    s = ""
@@ -129,12 +128,29 @@ def move_next_helper_right(start, i, end):
       s += "persons.line["+str(end)+"] "
    return s
 
+def move_next_helper_left_next(start, i, end):
+   s = ""
+   if (i>=start) & (i<=end) :
+      for j in range (start, end):
+         s += "next(persons.line["+str(j)+"]) + "
+      s += "next(persons.line["+str(end)+"]) - next(persons.line["+str(i)+"]) "
+   else :
+      for j in range (start, end-1):
+         s += "next(persons.line["+str(j)+"]) + "
+      s += "next(persons.line["+str(end-1)+"]) "
+   return s
 
-def compare_0(i, start, end) :
-   return str(int(np.floor((end-start)/2.0)))
-
-def compare_1(i, start, end) :
-   return str(int(np.ceil((end-start)/2.0)))
+def move_next_helper_right_next(start, i, end):
+   s = ""
+   if (i>=start) & (i<=end) :
+      for j in range (start, end):
+         s += "next(persons.line["+str(j)+"]) + "
+      s += "next(persons.line["+str(end)+"]) - next(persons.line["+str(i)+"]) "
+   else :
+      for j in range (start+1, end):
+         s += "next(persons.line["+str(j)+"]) + "
+      s += "next(persons.line["+str(end)+"]) "
+   return s
 
 
 def move_both_left_and_right(i, j, start1, end1, start2, end2) :
@@ -153,18 +169,18 @@ def move_left(i, j, start, end) :
    return string
 
 def move_both_left_and_right_next(i, j, start1, end1, start2, end2) :
-   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start1, i, end1)+"<= "+ compare_0(i, start1, end1) +" & "+move_next_helper_right(start2, i, end2)+"<= "+ compare_0(i, start2, end2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
-   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start1, i, end1)+">= "+ compare_1(i, start1, end1) +" & "+move_next_helper_right(start2, i, end2)+" >= "+ compare_1(i, start2, end2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n"
+   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & next(persons.happy["+ str(i) +"]) = FALSE & next(persons.line["+ str(i) +"]) = 0 & "+move_next_helper_left_next(start1, i, end1)+"<= "+ compare_0(i, start1, end1) +" & "+move_next_helper_right_next(start2, i, end2)+"<= "+ compare_0(i, start2, end2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n" 
+   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & next(persons.happy["+ str(i) +"]) = FALSE & next(persons.line["+ str(i) +"]) = 1 & "+move_next_helper_left_next(start1, i, end1)+">= "+ compare_1(i, start1, end1) +" & "+move_next_helper_right_next(start2, i, end2)+" >= "+ compare_1(i, start2, end2) +" : {"+ str(i-j) +","+ str(i+j) +"};\n"
    return string
 
 def move_right_next(i, j, start, end) :
-   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_right(start, i, end)+"<= "+ compare_0(i, start, end) +" : {"+ str(i+j) +"};\n" 
-   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_right(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i+j) +"};\n"
+   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & next(persons.happy["+ str(i) +"]) = FALSE & next(persons.line["+ str(i) +"]) = 0 & "+move_next_helper_right_next(start, i, end)+"<= "+ compare_0(i, start, end) +" : {"+ str(i+j) +"};\n" 
+   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & next(persons.happy["+ str(i) +"]) = FALSE & next(persons.line["+ str(i) +"]) = 1 & "+move_next_helper_right_next(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i+j) +"};\n"
    return string
 
 def move_left_next(i, j, start, end) :
-   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 0 & "+move_next_helper_left(start, i, end)+"<= "+ compare_0(i, start, end) +" : {"+ str(i-j) +"};\n"   
-   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = FALSE & persons.line["+ str(i) +"] = 1 & "+move_next_helper_left(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i-j) +"};\n"
+   string  = "\t\t\t\tnext(old_pos)="+ str(i) +" & next(persons.happy["+ str(i) +"]) = FALSE & next(persons.line["+ str(i) +"]) = 0 & "+move_next_helper_left_next(start, i, end)+"<= "+ compare_0(i, start, end) +" : {"+ str(i-j) +"};\n"   
+   string += "\t\t\t\tnext(old_pos)="+ str(i) +" & next(persons.happy["+ str(i) +"]) = FALSE & next(persons.line["+ str(i) +"]) = 1 & "+move_next_helper_left_next(start, i, end)+">= "+ compare_1(i, start, end) +" : {"+ str(i-j) +"};\n"
    return string
 
 def move_init(size, n) :
@@ -231,7 +247,7 @@ def move_init(size, n) :
 def move_next(size, n) :
    string = ""
    for i in range(1, size+1):
-      string += "\t\t\t\tnext(old_pos)="+ str(i) +" & persons.happy["+ str(i) +"] = TRUE : "+ str(i) +";\n"
+      string += "\t\t\t\tnext(old_pos)="+ str(i) +" & next(persons.happy["+ str(i) +"]) = TRUE : "+ str(i) +";\n"
       for j in range(1, size) :
          if (i-j>=1) & (i+j<=size) :
             if (i+j+n <= size) & (i-j-n<1) :
@@ -322,7 +338,6 @@ def create():
 	   '\tVAR\n'
       '\t\tline  : array 1..' + str(size) + ' of 0..1;\n' 
 	   '\t\thappy : array 1..' + str(size) + ' of boolean;\n'
-      '\t\tchange : boolean; \n'
       '\t\tseparation_table : array 1..' + str(size) + ' of 0..1;\n\n' 
 
       '\tASSIGN\n\n'
@@ -351,10 +366,6 @@ def create():
       '-- This is how the hapiness statuses change in the line when the person in\n'
 		'-- old_pos moves to new_pos.\n\n'
       +happy_next(size, n) + '\n\n' 
-
-      '-- Initilise change variable \n'
-      '\t\tinit(change) := FALSE;\n\n'    
-      +change_next(size) + 
       
       '-- Create the separation_table array\n'
       +sep_table_init(size-1) + 
@@ -374,6 +385,7 @@ def create():
 	   '\tVAR\n'
       '\t\told_pos: 1..' + str(size) + ';\n'   
       '\t\tnew_pos: 1..' + str(size) + ';\n'
+      '\t\tchange : boolean; \n'
       '\t\tpersons: line(old_pos,new_pos);\n\n'
 
       '\tASSIGN\n'
@@ -388,9 +400,17 @@ def create():
          '\t\t\t\tTRUE : next(old_pos);\n' 
 			'\t\tesac;\n\n'
 
+      '-- Initilise change variable \n'
+      '\t\tinit(change) := FALSE;\n\n'    
+      '\t\tnext(change) := \n'
+      '\t\t\tcase\n'
+      '\t\t\t\tnext(old_pos) != next(new_pos) : TRUE;\n' 
+      '\t\t\t\tTRUE : FALSE;\n'
+      '\t\t\tesac; \n\n'
+
       + fairness_constraint(size) +
       'SPEC\n'
-      '\tAF AG (!persons.change);\n\n'
+      '\tAF AG (!change);\n\n'
       
       'SPEC\n'
       '\tAF ('+complete_segregation(size)+'=1 | '+complete_segregation(size)+'=0);\n\n\n')
