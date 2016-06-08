@@ -8,9 +8,6 @@
 -- The module takes as input old_pos (the current position of the person to
 -- move) and new_pos (the new position of the person to move)
 
--- The boolean variable -change- is true if at least one happiness status changed
--- It is false if no happiness status changed
-
 -- Separation table is an array of size (n-1) of integers 1 and 0
 -- separation_table[i] is 1 if line[i] != line[i+1], 0 otherwise
 
@@ -30,9 +27,9 @@ MODULE line(old_pos,new_pos)
 		init(line[3]) := 0;
 		init(line[4]) := 0;
 		init(line[5]) := 0;
-		init(line[6]) := 0;
-		init(line[7]) := 0;
-		init(line[8]) := 0;
+		init(line[6]) := 1;
+		init(line[7]) := 1;
+		init(line[8]) := 1;
 
 -- This is how the colours change in the line when the person in
 -- old_pos moves to new_pos.
@@ -292,6 +289,9 @@ MODULE line(old_pos,new_pos)
 -- Otherwise, if the person at position 3 is not happy, then we find the
 -- nearest position where it could be happy. We do this in cases, from nearest
 -- to furthest. 
+
+-- The boolean variable -change- is true if at least one agent changed his/her position
+-- It is false if no player has moved
 
 MODULE main
 	VAR
@@ -619,7 +619,32 @@ MODULE main
 SPEC
 	AF AG (!change);
 
+-- Is complete segregation going to occur in all scenarios?
 SPEC
-	AF (persons.separation_table[1] +persons.separation_table[2] +persons.separation_table[3] +persons.separation_table[4] +persons.separation_table[5] +persons.separation_table[6] +persons.separation_table[7] =1 | persons.separation_table[1] +persons.separation_table[2] +persons.separation_table[3] +persons.separation_table[4] +persons.separation_table[5] +persons.separation_table[6] +persons.separation_table[7] =0);
+	AF ( persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7] =1 | persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7]  = 0 );
+
+-- Testing for different degrees of segregation
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7] = 1 ); 
+
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7] = 2 ); 
+
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7] = 3 ); 
+
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7] = 4 ); 
+
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7] = 5 ); 
+
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7] = 6 ); 
+
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] + persons.separation_table[3] + persons.separation_table[4] + persons.separation_table[5] + persons.separation_table[6] + persons.separation_table[7] = 7 ); 
+
+
 
 

@@ -5,7 +5,7 @@ def init_line(size):
    s = ""
    for i in range (1, size+1) :
       while True :
-         j = int(input ("Enter the colour of the player "+ str(i) +" (0 for black or 1 for white):"))
+         j = int(input ("Enter the colour of the player "+ str(i) +" (0 for black or 1 for white): "))
          if (j==0 or j==1) :
             break
          print("Try again!\n")
@@ -308,14 +308,24 @@ def move_next(size, n) :
 def complete_segregation(size) :
    s = ""
    for i in range(1, size-1) :
-      s += "persons.separation_table["+ str(i) +"] +"
+      s += "persons.separation_table["+ str(i) +"] + "
    s += "persons.separation_table["+ str(size-1) +"] "
    return s
 
+def segregation_level(size) : 
+   s = ""
+   for i in range(1, size) :
+      s += "SPEC\n"
+      s += "\tEF AG ( " 
+      for j in range (1, size-1) :
+         s += "persons.separation_table["+ str(j) +"] + "
+      s += "persons.separation_table["+ str(size-1) +"] = "+ str(i)+ " ); \n\n"
+   return s
+
 def create():
-   print("creating new  file")
-   size=int(input ("enter the size of the line (at least 2 players):"))
-   n=int(raw_input ("enter the neighbourhood size(at least 1):"))
+   print("Creating a new .smv file for your model.")
+   size=int(input ("Please, enter the size of the line (at least 2 players): "))
+   n=int(raw_input ("Please, enter the neighbourhood size (at least 1): "))
    try:
      file=open("file.smv",'w')
      file.write('-- The module below encodes the line. It has an array called line where each\n'
@@ -327,9 +337,6 @@ def create():
 
       '-- The module takes as input old_pos (the current position of the person to\n'
       '-- move) and new_pos (the new position of the person to move)\n\n'
-
-      '-- The boolean variable -change- is true if at least one happiness status changed\n'
-      '-- It is false if no happiness status changed\n\n'
 
       '-- Separation table is an array of size (n-1) of integers 1 and 0\n'
       '-- separation_table[i] is 1 if line[i] != line[i+1], 0 otherwise\n\n'      
@@ -381,6 +388,9 @@ def create():
       '-- nearest position where it could be happy. We do this in cases, from nearest\n'
       '-- to furthest. \n\n'
 
+      '-- The boolean variable -change- is true if at least one agent changed his/her position\n'
+      '-- It is false if no player has moved\n\n'
+
       'MODULE main\n'
 	   '\tVAR\n'
       '\t\told_pos: 1..' + str(size) + ';\n'   
@@ -412,9 +422,14 @@ def create():
       'SPEC\n'
       '\tAF AG (!change);\n\n'
       
+      '-- Is complete segregation going to occur in all scenarios?\n'
       'SPEC\n'
-      '\tAF ('+complete_segregation(size)+'=1 | '+complete_segregation(size)+'=0);\n\n\n')
+      '\tAF ( ' + complete_segregation(size) + '=1 | ' + complete_segregation(size) + ' = 0 );\n\n'
 
+      '-- Testing for different degrees of segregation\n'
+      + segregation_level(size) + 
+      '\n\n\n')
+      
      file.close()
    except:
          print("error occured")
