@@ -5,7 +5,7 @@ def init_line(size):
    s = ""
    for i in range (1, size+1) :
       while True :
-         j = int(input ("Enter the colour of the player "+ str(i) +" (0 for black or 1 for white): "))
+         j = int(input ("Enter the colour of the player "+ str(i) +" (0 for white or 1 for black): "))
          if (j==0 or j==1) :
             break
          print("Try again!\n")
@@ -316,7 +316,7 @@ def segregation_level(size) :
    s = ""
    for i in range(1, size) :
       s += "SPEC\n"
-      s += "\tEF AG ( " 
+      s += "\tEF ( " 
       for j in range (1, size-1) :
          s += "persons.separation_table["+ str(j) +"] + "
       s += "persons.separation_table["+ str(size-1) +"] = "+ str(i)+ " ); \n\n"
@@ -329,8 +329,8 @@ def create():
    try:
      file=open("file.smv",'w')
      file.write('-- The module below encodes the line. It has an array called line where each\n'
-      '-- element can be either 0 or 1; 0 for black, and 1 for white. So line[3]=0\n'
-      '-- represents that there is a black person at position 3. It also has a\n'
+      '-- element can be either 0 or 1; 0 for white, and 1 for black. So line[3]=0\n'
+      '-- represents that there is a white person at position 3. It also has a\n'
       '-- boolean array called happy representing whether the happiness status of each\n'
       '-- position in the line. So happy[2]=TRUE represents that the person at\n'
       '-- position 2 is happy.\n\n'
@@ -345,7 +345,7 @@ def create():
 	   '\tVAR\n'
       '\t\tline  : array 1..' + str(size) + ' of 0..1;\n' 
 	   '\t\thappy : array 1..' + str(size) + ' of boolean;\n'
-      '\t\tseparation_table : array 1..' + str(size) + ' of 0..1;\n\n' 
+      '\t\tseparation_table : array 1..' + str(size-1) + ' of 0..1;\n\n' 
 
       '\tASSIGN\n\n'
       '-- Initialise the line with zeros and ones that are passed as an input\n'
@@ -419,12 +419,13 @@ def create():
       '\t\t\tesac; \n\n'
 
       + fairness_constraint(size) +
+      '\n\n'
       'SPEC\n'
       '\tAF AG (!change);\n\n'
       
       '-- Is complete segregation going to occur in all scenarios?\n'
       'SPEC\n'
-      '\tAF ( ' + complete_segregation(size) + '=1 | ' + complete_segregation(size) + ' = 0 );\n\n'
+      '\tAF AG( ' + complete_segregation(size) + '=1 | ' + complete_segregation(size) + ' = 0 );\n\n'
 
       '-- Testing for different degrees of segregation\n'
       + segregation_level(size) + 
