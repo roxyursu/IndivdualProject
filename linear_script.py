@@ -316,7 +316,7 @@ def segregation_level(size) :
    s = ""
    for i in range(1, size) :
       s += "SPEC\n"
-      s += "\tEF ( " 
+      s += "\tEF AG ( " 
       for j in range (1, size-1) :
          s += "persons.separation_table["+ str(j) +"] + "
       s += "persons.separation_table["+ str(size-1) +"] = "+ str(i)+ " ); \n\n"
