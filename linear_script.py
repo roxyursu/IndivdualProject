@@ -305,6 +305,17 @@ def move_next(size, n) :
 
    return string
 
+def convergence_spec() :
+   while True :
+      ans = raw_input("Do you want to test convergence? [yes/no]\n").lower()
+      if ans in ('yes', 'y'):
+         return "SPEC\n\tAF AG (!change);\n\n"
+      elif ans in ('no','n'):
+         return ""
+      else:
+         sys.stdout.write("Please respond with 'yes' or 'no'")
+
+
 def complete_segregation(size) :
    s = ""
    for i in range(1, size-1) :
@@ -322,12 +333,35 @@ def segregation_level(size) :
       s += "persons.separation_table["+ str(size-1) +"] = "+ str(i)+ " ); \n\n"
    return s
 
+def complete_segregation_spec(size) :
+   while True :
+      ans = raw_input("Do you want to test for complete segregation? [yes/no]\n").lower()
+      if ans in ('yes', 'y'):
+         s = "-- Is complete segregation going to occur in all scenarios?"
+         s += "\nSPEC\n"
+         s += "\tAF AG( " + complete_segregation(size) + "=1 | " + complete_segregation(size) + " = 0 );\n\n"
+         return s
+      elif ans in ('no','n'):
+         return ""
+      else:
+         sys.stdout.write("Please respond with 'yes' or 'no'")
+
+def level_of_segregation_spec(size) :
+   while True :
+      ans = raw_input("Do you want to test for the level of segregation? [yes/no]\n").lower()
+      if ans in ('yes', 'y'):
+         return "-- Testing for different degrees of segregation\n" + segregation_level(size)
+      elif ans in ('no','n'):
+         return ""
+      else:
+         sys.stdout.write("Please respond with 'yes' or 'no'")
+
 def create():
    print("Creating a new .smv file for your model.")
    size=int(input ("Please, enter the size of the line (at least 2 players): "))
    n=int(raw_input ("Please, enter the neighbourhood size (at least 1): "))
    try:
-     file=open("file.smv",'w')
+     file=open("model.smv",'w')
      file.write('-- The module below encodes the line. It has an array called line where each\n'
       '-- element can be either 0 or 1; 0 for white, and 1 for black. So line[3]=0\n'
       '-- represents that there is a white person at position 3. It also has a\n'
@@ -420,15 +454,13 @@ def create():
 
       + fairness_constraint(size) +
       '\n\n'
-      'SPEC\n'
-      '\tAF AG (!change);\n\n'
+      + convergence_spec() +
       
-      '-- Is complete segregation going to occur in all scenarios?\n'
-      'SPEC\n'
-      '\tAF AG( ' + complete_segregation(size) + '=1 | ' + complete_segregation(size) + ' = 0 );\n\n'
+      complete_segregation_spec(size) +
 
-      '-- Testing for different degrees of segregation\n'
-      + segregation_level(size) + 
+      level_of_segregation_spec(size) +
+
+      
       '\n\n\n')
       
      file.close()

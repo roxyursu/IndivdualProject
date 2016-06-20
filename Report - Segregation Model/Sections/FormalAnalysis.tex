@@ -1,0 +1,585 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+In this section, we are interested in giving a formal definition of the multi-agent line model. We are going to define the black and white groups and we are going to look at the agents on the line from a permutation perspective. We decided to do so since we are only interested to differentiate between the agents based on their colour: black or white. From any other perspective they are identical. Furthermore, we need to formally define what we mean by a \textit{configuration}, what is a \textit{turn function} and when do we say that an agent is \textit{happy}. 
+
+In the second part, we are going to look at turn functions and their impact. We are going to describe Schelling's turn function in detail and look at some examples where different turn functions lead to completely different results.
+
+Finally, we are going to look into two of the main characteristics of the linear model: convergence and termination. We are going to define these two terms formally and sketch some proofs.
+
+\subsection{General Definitions}
+\verb|N| is a finite set of all players/agents. \verb|B|, \verb|W| are the sets of black and white agents, respectively. We assume that:
+
+\[ N = B \cup W\]
+\[B \cap W = \emptyset\]
+
+A permutation is an arrangement of objects in a specific order. Let us define the following permutation function:
+\[ \pi : N \rightarrow N\]
+Let \verb|P| be the set of all permutations.\\
+
+Two permutations, $\pi$ and $\pi'$, are \textbf{similar} if for each player i:
+\[\pi(i) \in W \Leftrightarrow \pi'(i) \in W\]
+
+For example, the following two permutations are \textbf{similar}:
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+1 & 2 &3 &4 &5 &6  &7 &8 &9 &10 &11 & 12 \\
+\x & \x &\z &\z &\z &\z  &\z &\z &\x &\x &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+11 & 16 &3 &7 &5 &3  &4 &8 &1 &2 &10 & 9 \\
+\x & \x &\z &\z &\z &\z  &\z &\z &\x &\x &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+\verb|C| is the set of \textit{equivalence} classes under similarity.
+\[ \big[ \pi \big] = \{ \pi'\in P | \pi'\mbox{ is similar to }\pi \} \]
+
+A \textbf{configuration} is just one element of \verb|C|.
+
+A \textbf{turn} function is a function $ \tau : \pi \rightarrow N $ such that 
+\[ \tau (\pi) = \tau(\pi')\mbox{ if } \pi\mbox{ is similar to }\pi'\]
+Turn function associates to each permutation one player.\\
+
+Given a configuration [$\pi$] of length {\bf n}=$|\pi|$ and the neighbourhood size \verb|k|, we define the left and right neighbourhoods of player $i$, fixing the permutation $\pi$. Notice here that the neighbourhood of player $i$ does not comprise himself.
+\[ L_k(i) = 
+  \begin{cases}
+    \bigcup\limits_{j=1}^{i-1} j  & \quad \text{for } i< k\\
+    \bigcup\limits_{j=i-k}^{i-1} j & \quad \text{for } i \geq k\\
+  \end{cases}
+\]
+
+\[ R_k(i) = 
+  \begin{cases}
+    \bigcup\limits_{j=i+1}^{n} j      & \quad \text{for } i> n-k\\
+    \bigcup\limits_{j=i+1}^{i+k} j      & \quad \text{for } i \leq n-k\\
+  \end{cases}
+\]
+
+The whole neighbourhood of player i is:
+\[ N_i = L_k(i) \cup R_k(i) \]
+
+A coloring is a function \verb|color|: $ N \to \{W,B\}$
+
+ and we say that $x \in W$ if \verb|color|$(x)=W$
+ 
+Let $d_i$ be the demand of player i.
+ Player i is happy if $i\in W$ implies that $N_i \cap W \geq d_i,\ d_i \in [0,1]$.
+ 
+$ i\in B$ implies that $N_i \cap B \geq d_i$.
+
+ In general, we want that $d_i$ is at least $\frac{1}{2}$.
+
+This can be written as the union of black and whites in that neighbourhood:
+\[ N_i = W_i \cup B_i \]
+
+A player is \textbf{happy} if at least 50\% of its neighbourhood is the same colour as oneself. That is,
+
+\[ \pi(i)\ \text{is happy if}
+  \begin{cases}
+    |W_i| \geq |B_i|      & \quad \text{for } i \in W\\
+    |W_i| \leq |B_i|      & \quad \text{for } i \in B\\
+  \end{cases}
+\] where $|A|$ is the cardinality of set A, \verb|i.e.| the number of elements in A.
+
+\subsection{On the impact of turn function}
+In this section, we are looking at how configurations are affected by different turn functions. The final configurations we are looking for must be:
+
+\begin{itemize}
+    \item \textit{Stable} - We say that a configuration reaches a stable point if at some point in the future no unhappy people can improve.
+    \item \textit{Segregation problem is minimal} - We are looking for the least segregated final configuration. That is, when in a line of two types of agents, we have the largest number groups (white and blacks) alternating. For example, in the \verb|Configuration 1| below we can distinguish 5 groups while in \verb|Configuration 2| we have only 3 groups. Hence, \verb|Configuration 1| is least segregated. 
+    \begin{table}[H]
+    \begin{center}
+    {\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|c|c|c|}
+    \hline
+    \x &\x &\x &\z &\z &\z  &\z &\x &\x & \z &\z & \z& \x&\x&\x&\x\\
+     \hline
+    \end{tabular}}
+    \end{center}
+    \caption*{Configuration 1}
+    \end{table}
+    
+    \begin{table}[H]
+    \begin{center}
+    {\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|c|c|c|}
+    \hline
+    \x &\x &\x &\x &\z &\z  &\z &\z &\z & \z &\z & \x& \x&\x&\x&\x\\
+     \hline
+    \end{tabular}}
+    \end{center}
+    \caption*{Configuration 2}
+    \end{table}
+\end{itemize}
+
+\subsubsection{Turn function in Schelling's model}
+
+Schelling's segregation model uses a specific turn function. We are going to explain how Schelling's turn function works step-by-step. Let us consider the following model so that we can demonstrate on this model each step of the way. 
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|}
+\hline
+  1 & 2 &3 &4 &5 &6  &7 &8 &9 & 10 & 11 & 12 & 13 \\
+\x &\x &\z &\x &\z &\z  &\x &\z &\x & \z&\x &\z & \x\\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+Let us take 13 players (6 of type \z\ and 7 of type \x). The figure above shows us how they are distributed on the line. We assume that the neighbourhood size is 2, \verb|n=2|. That is, every agent cares about the characteristics of the 2 neighbours on his left and the two on his right. And also lets make the assumption that each agent has a demand of 50\%. Hence, they are happy if at least 50\% of his neighbourhood are the same colour (have the same characteristics) as oneself.
+
+
+\textbf{Step 1: Given an initial configuration and a neighbourhood size, we first mark all the unhappy agents.} \\ 
+
+In our example, we have 4 unhappy players. We marked them with a dot.
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|}
+\hline
+ & &  $\cdot$ &$\cdot$ & & & $\cdot$ & &  & & & $\cdot$ &  \\
+  1 & 2 &3 &4 &5 &6  &7 &8 &9 & 10 & 11 & 12 & 13 \\
+\x &\x &\z &\x &\z &\z  &\x &\z &\x & \z&\x &\z & \x\\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+
+\textbf{Step 2:  The initial unhappy players get to move according to the following rules: }
+\begin{itemize}
+    \item  The unhappy players move one-by-one, alternating leftmost to rightmost, starting at the left-end. When their turn comes, the unhappy players move to the closest position that makes them happy. If there are two equidistant positions that would make a player happy, the player can choose between the two randomly.
+    \item Any initially unhappy players, that became happy by the time their turn to move comes, they will not move. They will keep their current position.
+    \item Any initially happy players, that became unhappy due to some other players movements will have to wait for the second round. In other words, they will get to move after everyone who was unhappy initially have moved.
+\end{itemize}
+
+
+Looking at our example, the initial unhappy players are: 3, 4, 7 and 12. These players get to move first in the order: 3, 12, 4 and finally 7. 
+
+The first player to move is the left-most unhappy player, that is the player on position 3. The nearest position that makes him happy is position 4
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|}
+\hline
+ & &  & & & & $\cdot$ & &  & & & $\cdot$ &  \\
+  1 & 2 &4 &3 &5 &6  &7 &8 &9 & 10 & 11 & 12 & 13 \\
+\x &\x &\x &\z &\z &\z  &\x &\z &\x & \z&\x &\z & \x\\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+We notice that after the first player moved, the player on position 4 who was initially discontent, became happy as well. 
+
+The next player to move is the right-most unhappy agent, that is the player number 12. The nearest position that makes player 12 happy is between players 9 and 10. This will make the players 9, 10 and 11 unhappy.
+ 
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|}
+\hline
+ & &  & & & & $\cdot$ & & $\cdot$  & &$\cdot$  & $\cdot$ &  \\
+  1 & 2 &4 &3 &5 &6  &7 &8 &9 & 12 & 10 & 11 & 13 \\
+\x &\x &\x &\z &\z &\z  &\x &\z &\x & \z&\z &\x & \x\\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+
+Next, it is player number 4's turn. However, player 4 is now content so he will keep his position. Hence, the next player to move is player number 7. There are two equidistant positions to move that would make player 7 happy: between players 4 and 3, or between players 12 and 10. We will randomly pick for our example to move at the right, between 12 and 10
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|}
+\hline
+ & &  & & & &  & $\cdot$&   & &$\cdot$  &  &  \\
+  1 & 2 &4 &3 &5 &6   &8 &9 & 12 &7& 10 & 11 & 13 \\
+\x &\x &\x &\z &\z &\z  &\z &\x &\z & \x&\z &\x & \x\\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+We finished moving all the initially unhappy players.\\
+
+\textbf{Step 3:  Create a new list with unhappy players (new initially unhappy list). Start moving these players like in Step 2. Repeat Step 3 until there are no unhappy players, or any existing unhappy players cannot improve their position.} \\ 
+
+Our new list of unhappy players consists of players 9 and 10.
+
+The first player to move is player 9. The closest position to make him happy is between player 7 and 10.
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|}
+\hline
+ & &  & & & &  & &  $\cdot$ & &$\cdot$  &  &  \\
+  1 & 2 &4 &3 &5 &6   &8  & 12 &7& 9&10 & 11 & 13 \\
+\x &\x &\x &\z &\z &\z  &\z &\z &\x & \x&\z &\x & \x\\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+Notice, player 7 is now unhappy. The next to move is player 10. The nearest position that makes him happy is between players 12 and 7.
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|c|c|c|}
+\hline
+  1 & 2 &4 &3 &5 &6   &8  & 12 &10&7& 9 & 11 & 13 \\
+\x &\x &\x &\z &\z &\z  &\z &\z &\z & \x&\x &\x & \x\\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+There are no more unhappy players so we stop. We reached a final, stable configuration which is clearly segregated. All the circles are clustered together. 
+
+
+\subsubsection{Examples - Turn function impact}
+Even the turn function used by Schelling is not ideal. With the following examples we will try to explain just why that is the case and what kind of problems we face. Furthermore, we will show what happens when we slightly alter Schelling's turn function by changing the order in which players can move.
+
+We make the following assumptions: the neighbourhood size is 2 (that is 2 on each side of the player) and that players move to the closest position (either left or right) that makes them content. A player is content if at least 50\% of his/her neighbourhood are like oneself. We are trying to see the impact of different turn functions.
+
+A first example we look at is the following:
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |}
+\hline
+$\cdot$ &  & & & &  & & $\cdot$ & \\
+1 & 2 &3 &4 &5 &6  &7 &8 &9 \\
+\x &\z &\z &\z &\z  &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+We can see that players at positions 1 and 8 are unhappy. Choosing to move first player 1 we get the following:
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |}
+\hline
+ 2 &3 &4 &5 &6  &7 &1 &8 &9 \\
+\z &\z &\z &\z  &\z &\z &\x &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+In this configuration, we reached total segregation. Everybody is happy. Hence, this is a happy case when we used Schelling's turn function.\\
+
+However, with the same initial configuration
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |}
+\hline
+$\cdot$ &  & & & &  & & $\cdot$ & \\
+1 & 2 &3 &4 &5 &6  &7 &8 &9 \\
+\x &\z &\z &\z &\z  &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+We could choose to move the player 8 first. He would move at the closest position that would make him happy. That is on the position occupied by player 9. The distribution would look like this:
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |}
+\hline
+$\cdot$ &  & & & &  & & $\cdot$ & \\
+1 & 2 &3 &4 &5 &6  &7 &9 &8 \\
+\x &\z &\z &\z &\z  &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+Player 1 and player 9 are unhappy. We could choose to move player 1 and ending up with total segregation:
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |}
+\hline
+ 2 &3 &4 &5 &6  &7 &1 &9 &8 \\
+\z &\z &\z &\z  &\z &\z &\x &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+Or we could move player 9, leading to the configuration that we started with:
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |}
+\hline
+$\cdot$ &  & & & &  & & $\cdot$ & \\
+1 & 2 &3 &4 &5 &6  &7 &8 &9 \\
+\x &\z &\z &\z &\z  &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+There is a cycle. Hence, depending on the turn function, the configuration might not converge.\\
+
+Another example we could look at, has the following initial configuration:
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+ &$\cdot$ &  & & & $\cdot$ &$\cdot$  & & & &$\cdot$ & \\
+1 & 2 &3 &4 &5 &6  &7 &8 &9 &10 &11 & 12 \\
+\x & \x &\z &\z &\z &\x  &\x &\z &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+Players 2, 6, 7, and 11 are unhappy. According to Schelling's turn function, we move first player 2, followed by player 11.
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+ &$\cdot$ &  & & & $\cdot$ &$\cdot$  & & & &$\cdot$ & \\
+2 & 1 &3 &4 &5 &6  &7 &8 &9 &10 &12 & 11 \\
+\x & \x &\z &\z &\z &\x  &\x &\z &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+Next we move player 6.
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+ & &  & & &  &$\cdot$  & & & &$\cdot$ & \\
+2 & 1 &6 &3 &4 &5  &7 &8 &9 &10 &12 & 11 \\
+\x & \x &\x &\z &\z &\z  &\x &\z &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+The next player to be moved is player 7. However, here we face a problem with Schelling's turn function. There are two equidistant positions that would make player 7 happy. Hence, we have two possible final configurations:
+
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+1 & 2  &6&3 &4 &5  &8 &9 &10  &7 &11 & 12 \\
+\x & \x&\x  &\z &\z &\z &\z &\z &\z &\x  &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+ &&  & & &  & & & & &$\cdot$ & \\
+1 & 2 &6 &7 &3 &4  &5 &8 &9 &10 &11 & 12 \\
+\x & \x &\x &\x &\z &\z  &\z &\z &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+The latest configuration does not converge. It is not a stable configuration.\\
+
+So far we saw examples that, depending on the order we move the players, the configurations might or might not converge. Look now at the following initial state:
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c|}
+\hline
+ & $\cdot$ &  & & & &  & & $\cdot$ & \\
+1 & 2 &3 &4 &5 &6  &7 &8 & 9 & 10 \\
+\x &\x &\z &\z &\z &\z  &\z &\z &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+Players on positions 2 and 9 are unhappy. Regardless of whom we choose to move first, the configuration does not converge. Hence, the turn function has no effect on this configuration.
+
+\subsection{Convergence }
+Convergence is an important characteristic of our linear model. We are interested in giving formal definitions for convergence and check whether or not it is the case that any configuration converges using Schelling's turn function. We are going to look at a couple of examples where the configurations do not converge and we are going to prove formally that for a specific turn function, termination will always occur.\\
+
+\textbf{Definition Convergence: } We say that a configuration \textit{converges} if, at some future point, it reaches a \textit{terminal state}. A terminal state is a state where no unhappy player can improve his or her position. \\
+
+
+\subsubsection{Conjectures }
+
+\textbf{Conjecture 1: Convergence of all initial configurations}
+
+We want to check whether it is the case that all initial configurations always converge using Schelling's turn function. However, Schelling's turn function is not ideal. We will have a look at one example where an initial configuration does not reach a stable point using Schelling's turn function.\\
+
+\textbf{Conjecture 2: Another approach to convergence}
+
+ Another related conjecture to convergence that we considered is the following: For every configuration and any turn function, moving an unhappy person will not increase the number of unhappy people. Although this seems to hold and even Schelling makes some suggestions that this is the case, we will have a look at an example where this conjecture is falsified.\\
+ 
+\textbf{Conjecture 3: Termination using a specific turn function}
+
+Finally, we want to check the following: For every configuration there exists a turn function such that the configuration reaches a fixed point, \verb|i.e.| there exists final configuration such that no unhappy person is able to improve. We will see in the next part that this holds if we relax the turn functions. In other words, with a specific turn function, we could always ensure termination.
+
+%\subsubsection{Dichotomous mixing constraint}
+%    Not both groups can enjoy numerical superiority. But if each of them insists on being local majority then there is only one mixture that will satisfy them: \textit{complete segregation}.
+    
+\subsubsection{Sketched Proofs}
+
+\textbf{Proof 1: Convergence of all initial configurations }
+
+The following scenario does not converge to a fix point.
+
+We will be using a turn function where an unhappy agent moves to the closest place that would meet his requirements, \verb|i.e.| makes him happy. Also, assume for now that the neighbourhood size is 2. \verb|i.e.| each individual will be interested in the colour of the 2 neighbours of his right and the 2 neighbours on his left. To be content, he wants at least 50\% of these neighbours to be same colour as oneself.
+
+Looking at the following distribution:
+
+\begin{table}[ht]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+ & $\cdot$ &  & & & &  & &  & & &\\
+1 & 2 &3 &4 &5 &6  &7 &8 & 9 & 10 &11&12\\
+\x & \x &\z &\z &\z &\z  &\z &\z &\x &\x &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+We have 6 whites, \z, and 6 blacks, \x, and the only unhappy person in this configuration is the individual \x\ on position 2. According to the turn function, he will move to the closest position in which he is happy. That would be position one. After the movement, we will have:
+
+
+\begin{table}[ht]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| c |c |c |c |}
+\hline
+ & $\cdot$ &  & & & &  & &  & & & \\
+2 & 1 &3 &4 &5 &6  &7 &8 & 9 & 10 &11 & 12\\
+\x & \x &\z &\z &\z &\z  &\z &\z &\x &\x &\x & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+We can see that we are now back to the initial situation since all we did was swapping position of the first and second player. In this configuration, we have again the individual on position 2 being the only unhappy individual. According to the turn function, player \x\ on new position 2 will move to the closest position that will meet his demands. This is new position 1. Hence, we are entering an infinite cycle. Therefore, for the given turning function this scenario does not converge to a fixed point. $ \Box $ \\
+
+
+\textbf{Proof 2: Another approach to convergence}
+
+Now, we are going to look at the other conjecture we made above: For every configuration and any turn function, moving an unhappy person will not increase the number of unhappy people. Although this is true in most cases, it does not always hold. Here is a counter example.
+
+Starting with the following scenario with 8 players (4 white and 4 blacks):
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c|}
+\hline
+ & $\cdot$ &  & & &  & $\cdot$ & \\
+ 1 & 2 &3 &4 &5 &6  &7 &8 \\
+\z &\x &\z &\x  &\z &\x &\z & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+With a local neighbourhood of size 2, we see that players on positions 2 and 7 are unhappy. Picking player on position 2 to move first, this will move in between players 4 and 5 since this is the nearest position that will make him happy. After player 2 moves, we have the following configuration.
+
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c|}
+\hline
+ & $\cdot$ & $\cdot$ & &$\cdot$ &  & $\cdot$ & \\
+ 1 & 3 &4 &2 &5 &6  &7 &8 \\
+\z &\z &\x &\x  &\z &\x &\z & \x \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+We started with a configuration with only 2 unhappy players. After a single move, we now have 4 unhappy players. The number of unhappy players increased, hence, the above statement does not hold for all configurations and any turn functions. $ \Box $ \\
+
+
+\textbf{Proof 3: Termination using a specific turn function}
+
+We are going to show this by relaxing the constraint that you need to go to the closest neighbourhood that makes you happy. We will allow players to go to any neighbourhood.
+
+
+\textbf{Strong assumptions:} We have enough black and white people (at least as many as \verb|neighbourhood size + 1|), and people can freely move to a neighbourhood that makes them happy. Then, there are ways of moving the agents that always converge. \verb|i.e.| the algorithm terminates, reaches a final point.\\
+
+
+Consider a general scenario: $x_1 ... x_n$
+
+Go from left to right until we find the first unhappy person. If no unhappy person than we are done. Call this unhappy person \verb|A| and let her be white (same reasoning if black). Move her until happy on position \verb|y|. 
+
+Assume now that \verb|A'| of same colour is unhappy. Make \verb|A'| move to the left of \verb|A|. So \verb|A| and \verb|A'| are close to each other. Notice that \verb|A| could not have become unhappy because \verb|A'| is close to her. 
+
+Repeat until we have that before \verb|A| there is a line of black people followed by a line of white people, which includes \verb|A| and \verb|A'|.
+
+Going to the right of \verb|A'|, until first unhappy person. Let's make her move to the right of \verb|A'|. We are not making \verb|A'| unhappy by doing this. Nor all the other whites before \verb|A'|. 
+
+Repeat until all the white people on the right of \verb|A'| are happy. Hence, all the white people are happy.
+
+Now, for blacks, if noone can improve or everyone is happy, we are done.
+
+Suppose there is a black, \verb|B|, that can improve. We notice that no such improvement can happen by moving inside the white line that we have constructed in the middle. So it must be outside. Repeat the procedure for black people, creating a black chain.
+
+We obtain a scenario of the form:
+
+\[ Random\ People + White\ Chain + Random\ People + Black\ Chain\]
+
+So now, for every individual in the \verb|Random People| that can improve his/her position (\verb|i.e.| there are unhappy, but they can be happy), join them with the white chain if they are white, or with the black chain if they are black. 
+
+Hence, the algorithm terminates. $ \Box $
+
+%\subsection{Another approach}
+
+%We want to analyse the results for lots of turn functions. We want to find situations where there is no segregation. 
+
+%We are going to define states and single moves at each state. 
+
+%The main issue is to find \textbf{a protocol that avoids segregation}.
+
+%Create states:
+%\[s_1 (oxx) = [\_x\_] = 2 \]
+%\[s_2 (xox) = [xo\_] = 1 \]
+%\[s_3 (xxo)\ \ \ \ \  \ \ \ \ \ \  \ \ \ \  \]
+
+%$s$ - segregation true
+
+%$\overline{s}$ - segregation false
+
+%\begin{tikzpicture}
+%\begin{scope}[every node/.style={circle,thick,draw}]
+%    \node (s1) at (0,0) {s1};
+%    \node (s2) at (2.5,1) {s2};
+%    \node (s3) at (2.5,-1) {s3};
+%    \node (s4) at (5,0) {s4} ;
+%\end{scope}
+
+%\begin{scope}[>={Stealth[black]},
+%              every node/.style={fill=white,circle},
+%              every edge/.style={draw=red,very thick}]
+%    \path [->] (s1) edge node {$t$} (s2);
+%    \path [->] (s1) edge node {$t'$} (s3);
+%    \path [->] (s3) edge  (s4); 
+%    \path [->] (s4) edge[bend right=70]  (s1); 
+%\end{scope}
+%\end{tikzpicture}
+
+%Notice: number of states is finite.
+\end{document}

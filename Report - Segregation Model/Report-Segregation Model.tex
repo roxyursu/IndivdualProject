@@ -1,0 +1,640 @@
+\documentclass[twoside,openright]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage{color}
+\usepackage[parfill]{parskip}  % use new lines instead of indentations
+\usepackage{tabu}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{placeins}
+\usepackage{afterpage}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{wasysym}
+\usepackage{hyperref}
+\usepackage[toc,page]{appendix}
+
+\usepackage{subfiles}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+
+
+\usepackage{natbib}
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear,open={[},close={]}}
+
+
+\usepackage{graphicx}
+\graphicspath{{Images/}{../Images/}}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{myblue}{rgb}{0,0,0.6}
+\definecolor{background}{rgb}{0.9,0.9,0.9}
+
+\lstset{ %
+  backgroundcolor=\color{background},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{myblue},       % keyword style
+  language=SQL,                 % the language of the code
+  otherkeywords={*,MODULE,:,VAR,ASSIGN,init,next,case,esac,TRUE,FALSE,boolean,AF,AG,EX,EF},           % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\let\oldsection\section% Store \section in \oldsection
+\renewcommand{\section}{\cleardoublepage\oldsection}% Prepend new \section with \cleardoublepage
+
+\makeatletter
+\if@twoside % commands below work only for twoside option of \documentclass
+    \newlength{\textblockoffset}
+    \setlength{\textblockoffset}{10mm}
+    \addtolength{\hoffset}{\textblockoffset}
+    \addtolength{\evensidemargin}{-2.0\textblockoffset}
+\fi
+\makeatother
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}} % optional; useful if paragraphs are to be numbered
+
+
+%----------------------------------------------------------------------------------------
+%	Define new commands
+%----------------------------------------------------------------------------------------
+\newcommand{\x}{\textbf{\textcolor{red}{$\ast$}}} %black    
+\newcommand{\z}{\textbf{\textcolor{blue}{$\circ$}}} %white
+
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \newpage}
+
+
+\begin{document}
+\pagenumbering{roman}
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics[scale=0.05]{logo.png}\\[1cm] 
+
+%----------------------------------------------------------------------------------------
+
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Imperial College London}\\[1.5cm]
+\textsc{\Large BEng Final Year Project}\\[0.5cm] 
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries A Computational Analysis of Linear Segregation Models}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.5\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Roxana G. \textsc{Ursu}\\
+\end{flushleft}
+\end{minipage} 
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+Dr. Paolo  \textsc{Turrini}\\ % Supervisor's Name
+\emph{Second Marker:} \\
+Dr. Panagiotis  \textsc{Kouvaros}
+\end{flushright}
+\end{minipage}\\[4cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\newpage
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+Society can segregate by so many characteristics such as social standing, income, educational background, ethnic groups, colour of skin, shared language, gender, age, religion. Segregation  can lead to perceived prejudices, such as dislike for other groups and inaccurate judgement of correlations (expecting some social groups to be less intelligent, be more aggressive, have a tendency for extremism, be more tolerant, etc.). 
+
+In this project we are going to have a look at one of the first papers that address \textit{racial segregation} and presents a social dynamics model, \textit{Dynamic models of segregation}, \cite{schelling}. We are going to look at Schelling's linear model and at some of the theoretical statements he made. Schelling's linear model is a \textit{two-type agent model}, that is, the agents are one of the two possible types: blacks or whites. In any other aspects, the agents are identical. This model, although simplistic, helps us understand why segregation is such hard problem to combat.
+
+The main contribution of this project is a rigorous justification for some of Schelling's intuitions and simulation results regarding the relaxation of the turn function and convergence of the system. Furthermore, we give a formal analysis of the impact of turn functions in linear segregation models. We also designed a multi-agent computational model that allowed us to automatically test our formal configurations using \verb|NuSMV| model checker. We formally proved that a particular turn function, constructed by relaxing Schelling's turn function, would always ensure that our system reaches a stable final configuration. The report details the approach taken in analysing the impact of turn functions and the convergence of the system both in analytical and simulation approach.
+
+This projects provides valuable insight into the potential of using a model checker over an object oriented design to test the behaviour of a multi-agent computational model. We are going to see the numerous advantages of this approach, however, we have to keep in mind the \textit{State Explosion Problem} when we are scaling up the system. Further work is required to either ensure the construction of a compact model of the system or to develop techniques that test large size systems by only looking at a fraction of the system.
+
+
+
+
+
+\newpage
+\section*{Acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+Firstly, I would like to thank my supervisor, Dr. Paolo Turrini, for his guidance and contagious enthusiasm throughout this project. Secondly, I would like to thank my second marker, Dr. Panagiotis  Kouvaros, for his advice and assistance especially during the designing and implementation stages of the computational model.
+
+Furthermore, I would like to thank my family and friends for their unconditional love and encouragement throughout my time at Imperial College.
+
+
+\newpage
+\tableofcontents
+\addcontentsline{toc}{section}{Contents}
+
+\newpage
+\pagenumbering{arabic}
+\section{Introduction}
+\subfile{Sections/Introduction}
+
+\newpage
+
+\section{General Background}
+\subfile{Sections/GeneralBackground}
+
+
+\newpage
+\section{Schelling's Model}
+\subfile{Sections/SchellingModel}
+
+\newpage
+\section{Formal Analysis}
+\subfile{Sections/FormalAnalysis}
+
+
+\newpage
+\section{Implementation - Multi-Agent Computational Model}
+\subfile{Sections/Implementation}
+
+\newpage
+\section{Simulation and Evaluation}
+\subfile{Sections/Simulation}
+
+\newpage
+\section{Conclusion and Open Questions}
+\subfile{Sections/Conclusion}
+
+
+\afterpage{\blankpage}
+\newpage
+
+\addcontentsline{toc}{section}{References}
+%\printbibliography
+\bibliography{bibliography}
+
+
+\newpage
+\begin{appendices}
+
+\section{.smv File Example}
+\label{appendix:smv}
+An example of the \verb|.smv file| for the following configuration with neighbourhood size 1.
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c | }
+\hline
+1 & 2 &3 \\
+\x & \z &\x   \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+\begin{lstlisting}
+-- The module below encodes the line. It has an array called line where each
+-- element can be either 0 or 1; 0 for white, and 1 for black. So line[3]=0
+-- represents that there is a white person at position 3. It also has a
+-- boolean array called happy representing whether the happiness status of each
+-- position in the line. So happy[2]=TRUE represents that the person at
+-- position 2 is happy.
+
+-- The module takes as input old_pos (the current position of the person to
+-- move) and new_pos (the new position of the person to move)
+
+-- Separation table is an array of size (n-1) of integers 1 and 0
+-- separation_table[i] is 1 if line[i] != line[i+1], 0 otherwise
+
+MODULE line(old_pos,new_pos)
+	VAR
+		line  : array 1..3 of 0..1;
+		happy : array 1..3 of boolean;
+		separation_table : array 1..2 of 0..1;
+
+	ASSIGN
+
+-- Initialise the line with zeros and ones that are passed as an input
+-- i.e. Construct the initial line configuration
+
+		init(line[1]) := 1;
+		init(line[2]) := 0;
+		init(line[3]) := 1;
+
+-- This is how the colours change in the line when the person in
+-- old_pos moves to new_pos.
+
+		next(line[1]) :=
+			case
+				new_pos = 1 : line[old_pos]; 
+				new_pos > old_pos & 1 >= old_pos & 1 < new_pos : line[2];
+				TRUE : line[1];
+			esac;
+		next(line[2]) :=
+			case
+				new_pos =  2 : line[old_pos];
+				new_pos > old_pos &  2 >= old_pos &  2 < new_pos : line[3];
+				new_pos < old_pos & 2 > new_pos & 2 <= old_pos : line[1];
+				TRUE : line[2];
+			esac; 
+		next(line[3]) :=
+			case
+				new_pos = 3 : line[old_pos]; 
+				new_pos < old_pos & 3 > new_pos & 3 <= old_pos : line[2];
+				TRUE : line[3];
+			esac;
+
+-- We initialise the happiness status.
+
+		init(happy[1]) :=
+			case 
+				line[1] = 0 & line[1] + line[2] - line[1]  <= 0 : TRUE;
+				line[1] = 1 & line[1] + line[2] - line[1]  >= 1 : TRUE;
+				TRUE: FALSE;
+			esac;
+		init(happy[2]) :=
+			case 
+				line[2] = 0 & line[1] + line[2] + line[3] - line[2]  <= 1 : TRUE;
+				line[2] = 1 & line[1] + line[2] + line[3] - line[2]  >= 1 : TRUE;
+				TRUE: FALSE;
+			esac;
+		init(happy[3]) :=
+			case 
+				line[3] = 0 & line[2] + line[3] - line[3]  <= 0 : TRUE;
+				line[3] = 1 & line[2] + line[3] - line[3]  >= 1 : TRUE;
+				TRUE: FALSE;
+			esac;
+
+
+-- This is how the hapiness statuses change in the line when the person in
+-- old_pos moves to new_pos.
+
+		next(happy[1]) :=
+			case 
+				next(line[1]) = 0 & next(line[1]) +next(line[2]) - next(line[1])  <= 0 : TRUE;
+				next(line[1]) = 1 & next(line[1]) +next(line[2]) - next(line[1])  >= 1 : TRUE;
+				TRUE: FALSE;
+			esac;
+		next(happy[2]) :=
+			case 
+				next(line[2]) = 0 & next(line[1]) +next(line[2]) + next(line[3]) - next(line[2])  <= 1 : TRUE;
+				next(line[2]) = 1 & next(line[1]) +next(line[2]) + next(line[3]) - next(line[2])  >= 1 : TRUE;
+				TRUE: FALSE;
+			esac;
+		next(happy[3]) :=
+			case 
+				next(line[3]) = 0 & next(line[2]) +next(line[3]) - next(line[3])  <= 0 : TRUE;
+				next(line[3]) = 1 & next(line[2]) +next(line[3]) - next(line[3])  >= 1 : TRUE;
+				TRUE: FALSE;
+			esac;
+
+
+-- Create the separation_table array
+		init(separation_table[1]) := 
+			case 
+				line[1] != line[2] : 1;
+				TRUE : 0;
+ 			esac;
+
+		init(separation_table[2]) := 
+			case 
+				line[2] != line[3] : 1;
+				TRUE : 0;
+ 			esac;
+
+		next(separation_table[1]) := 
+			case 
+				next(line[1]) != next(line[2]) : 1;
+				TRUE : 0;
+ 			esac;
+
+		next(separation_table[2]) := 
+			case 
+				next(line[2]) != next(line[3]) : 1;
+				TRUE : 0;
+ 			esac;
+
+
+
+-- The main module has an old_pos variable. The value of this variable is
+-- always arbitrary from 1 to n. If, at a step, old_pos = 3, then we represent
+-- that is the turn of the person in position 3 to move. If this person is
+-- already happy (i.e., in the module above happy[3] = TRUE), then it remains
+-- in the same position (i.e., we set the new_pos variable below to 3).
+-- Otherwise, if the person at position 3 is not happy, then we find the
+-- nearest position where it could be happy. We do this in cases, from nearest
+-- to furthest. 
+
+-- The boolean variable -change- is true if at least one agent changed his/her position
+-- It is false if no player has moved
+
+MODULE main
+	VAR
+		old_pos: 1..3;
+		new_pos: 1..3;
+		change : boolean; 
+		persons: line(old_pos,new_pos);
+
+	ASSIGN
+		init(new_pos) :=
+			case
+				old_pos=1 & persons.happy[1] = TRUE : 1;
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[1] <= 1 : {2};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[1] >= 1 : {2};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 0 & persons.line[3] <= 0 : {3};
+				old_pos=1 & persons.happy[1] = FALSE & persons.line[1] = 1 & persons.line[3] >= 1 : {3};
+				old_pos=2 & persons.happy[2] = TRUE : 2;
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] - persons.line[2] <= 0 & persons.line[2] + persons.line[3] - persons.line[2] <= 0 : {1,3};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] - persons.line[2] >= 1 & persons.line[2] + persons.line[3] - persons.line[2]  >= 1 : {1,3};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[1] + persons.line[2] - persons.line[2] <= 0 : {1};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[1] + persons.line[2] - persons.line[2] >= 1 : {1};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 0 & persons.line[2] + persons.line[3] - persons.line[2] <= 0 : {3};
+				old_pos=2 & persons.happy[2] = FALSE & persons.line[2] = 1 & persons.line[2] + persons.line[3] - persons.line[2] >= 1 : {3};
+				old_pos=3 & persons.happy[3] = TRUE : 3;
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] <= 1 : {2};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] + persons.line[2] + persons.line[3] - persons.line[3] >= 1 : {2};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 0 & persons.line[1] <= 0 : {1};
+				old_pos=3 & persons.happy[3] = FALSE & persons.line[3] = 1 & persons.line[1] >= 1 : {1};
+				TRUE : old_pos;
+		esac;
+
+		next(new_pos) :=
+			case
+				next(old_pos)=1 & next(persons.happy[1]) = TRUE : 1;
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[1]) <= 1 : {2};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[1]) >= 1 : {2};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 0 & next(persons.line[3]) <= 0 : {3};
+				next(old_pos)=1 & next(persons.happy[1]) = FALSE & next(persons.line[1]) = 1 & next(persons.line[3]) >= 1 : {3};
+				next(old_pos)=2 & next(persons.happy[2]) = TRUE : 2;
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[1]) + next(persons.line[2]) - next(persons.line[2]) <= 0 & next(persons.line[2]) + next(persons.line[3]) - next(persons.line[2]) <= 0 : {1,3};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[1]) + next(persons.line[2]) - next(persons.line[2]) >= 1 & next(persons.line[2]) + next(persons.line[3]) - next(persons.line[2])  >= 1 : {1,3};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[1]) + next(persons.line[2]) - next(persons.line[2]) <= 0 : {1};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[1]) + next(persons.line[2]) - next(persons.line[2]) >= 1 : {1};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 0 & next(persons.line[2]) + next(persons.line[3]) - next(persons.line[2]) <= 0 : {3};
+				next(old_pos)=2 & next(persons.happy[2]) = FALSE & next(persons.line[2]) = 1 & next(persons.line[2]) + next(persons.line[3]) - next(persons.line[2]) >= 1 : {3};
+				next(old_pos)=3 & next(persons.happy[3]) = TRUE : 3;
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[3]) <= 1 : {2};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[1]) + next(persons.line[2]) + next(persons.line[3]) - next(persons.line[3]) >= 1 : {2};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 0 & next(persons.line[1]) <= 0 : {1};
+				next(old_pos)=3 & next(persons.happy[3]) = FALSE & next(persons.line[3]) = 1 & next(persons.line[1]) >= 1 : {1};
+				TRUE : next(old_pos);
+		esac;
+
+-- Initilise change variable 
+		init(change) := FALSE;
+
+		next(change) := 
+			case
+				next(old_pos) != next(new_pos) : TRUE;
+				TRUE : FALSE;
+			esac; 
+
+	FAIRNESS old_pos = 1
+	FAIRNESS old_pos = 2
+	FAIRNESS old_pos = 3
+
+
+SPEC
+	AF AG (!change);
+
+-- Is complete segregation going to occur in all scenarios?
+SPEC
+	AF AG ( persons.separation_table[1] + persons.separation_table[2] =1 | persons.separation_table[1] + persons.separation_table[2]  = 0 );
+
+-- Testing for different degrees of segregation
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] = 1 ); 
+
+SPEC
+	EF AG ( persons.separation_table[1] + persons.separation_table[2] = 2 ); 
+
+
+
+
+
+\end{lstlisting}
+
+
+\section{Convergence - NuSMV Counter Example}
+\label{appendix:counter example convergence 3}
+Initial Configuration:
+
+\begin{table}[H]
+\begin{center}
+{\begin{tabular}{| c |c| c| c| c |c| c |c| }
+\hline
+ &  $\cdot$&  $\cdot$ &  $\cdot$ & $\cdot$ & $\cdot$ &  $\cdot$ &  \\
+1 & 2 &3 &4 &5 &6  &7 &8\\
+\x & \x &\z &\z &\x &\x  &\z &\z  \\
+ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+Specification Tested:
+\begin{lstlisting}
+SPEC
+    AF AG (!change);
+ \end{lstlisting}
+
+
+Counter Example:
+\begin{lstlisting}
+-- specification AF (AG !change)  is false
+-- as demonstrated by the following execution sequence
+Trace Description: CTL Counterexample 
+Trace Type: Counterexample 
+-> State: 1.1 <-
+  old_pos = 8
+  new_pos = 8
+  change = FALSE
+  persons.line[1] = 1
+  persons.line[2] = 1
+  persons.line[3] = 0
+  persons.line[4] = 0
+  persons.line[5] = 1
+  persons.line[6] = 1
+  persons.line[7] = 0
+  persons.line[8] = 0
+  persons.happy[1] = TRUE
+  persons.happy[2] = FALSE
+  persons.happy[3] = FALSE
+  persons.happy[4] = FALSE
+  persons.happy[5] = FALSE
+  persons.happy[6] = FALSE
+  persons.happy[7] = FALSE
+  persons.happy[8] = TRUE
+  persons.separation_table[1] = 0
+  persons.separation_table[2] = 1
+  persons.separation_table[3] = 0
+  persons.separation_table[4] = 1
+  persons.separation_table[5] = 0
+  persons.separation_table[6] = 1
+  persons.separation_table[7] = 0
+  persons.separation_table[8] = 0
+-> State: 1.2 <-
+  old_pos = 7
+  new_pos = 6
+  change = TRUE
+-> State: 1.3 <-
+  old_pos = 6
+  change = FALSE
+  persons.line[6] = 0
+  persons.line[7] = 1
+  persons.happy[4] = TRUE
+  persons.happy[6] = TRUE
+  persons.separation_table[5] = 1
+  persons.separation_table[7] = 1
+-> State: 1.4 <-
+  old_pos = 2
+  new_pos = 3
+  change = TRUE
+-> State: 1.5 <-
+  old_pos = 5
+  new_pos = 5
+  change = FALSE
+  persons.line[2] = 0
+  persons.line[3] = 1
+  persons.happy[3] = TRUE
+  persons.happy[5] = TRUE
+  persons.separation_table[1] = 1
+  persons.separation_table[3] = 1
+-> State: 1.6 <-
+  old_pos = 4
+  new_pos = 4
+-> State: 1.7 <-
+  old_pos = 3
+  new_pos = 3
+-> State: 1.8 <-
+  old_pos = 2
+  new_pos = 4
+  change = TRUE
+-> State: 1.9 <-
+  old_pos = 1
+  new_pos = 1
+  change = FALSE
+  persons.line[2] = 1
+  persons.line[3] = 0
+  persons.happy[3] = FALSE
+  persons.happy[5] = FALSE
+  persons.separation_table[1] = 0
+  persons.separation_table[3] = 0
+-- Loop starts here
+-> State: 1.10 <-
+  old_pos = 8
+  new_pos = 8
+-> State: 1.11 <-
+  old_pos = 2
+  new_pos = 3
+  change = TRUE
+-> State: 1.12 <-
+  old_pos = 7
+  new_pos = 5
+  persons.line[2] = 0
+  persons.line[3] = 1
+  persons.happy[3] = TRUE
+  persons.happy[5] = TRUE
+  persons.separation_table[1] = 1
+  persons.separation_table[3] = 1
+-> State: 1.13 <-
+  old_pos = 6
+  persons.line[6] = 1
+  persons.line[7] = 0
+  persons.happy[4] = FALSE
+  persons.happy[6] = FALSE
+  persons.separation_table[5] = 0
+  persons.separation_table[7] = 0
+-> State: 1.14 <-
+  old_pos = 5
+  change = FALSE
+-> State: 1.15 <-
+  old_pos = 7
+  new_pos = 6
+  change = TRUE
+-> State: 1.16 <-
+  old_pos = 4
+  new_pos = 4
+  change = FALSE
+  persons.line[6] = 0
+  persons.line[7] = 1
+  persons.happy[4] = TRUE
+  persons.happy[6] = TRUE
+  persons.separation_table[5] = 1
+  persons.separation_table[7] = 1
+-> State: 1.17 <-
+  old_pos = 3
+  new_pos = 3
+-> State: 1.18 <-
+  old_pos = 2
+  new_pos = 4
+  change = TRUE
+-> State: 1.19 <-
+  old_pos = 1
+  new_pos = 1
+  change = FALSE
+  persons.line[2] = 1
+  persons.line[3] = 0
+  persons.happy[3] = FALSE
+  persons.happy[5] = FALSE
+  persons.separation_table[1] = 0
+  persons.separation_table[3] = 0
+-> State: 1.20 <-
+  old_pos = 8
+  new_pos = 8
+ \end{lstlisting}
+
+\end{appendices}
+
+\end{document}

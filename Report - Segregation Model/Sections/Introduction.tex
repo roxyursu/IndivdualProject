@@ -1,0 +1,61 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+In 1917, Marquis Converse produced the very first basketball-only shoes (or sneakers), named Converse All Stars. In the same year, Chuck Taylor started wearing them as a high school basketball player at Columbus High School and in 1921, Taylor started working with Converse to improve the design by enhancing the flexibility and support of the shoes. The new, improved design became known as the Chuck Taylor All-Stars and they are the best selling basketball shoes of all times.
+
+Shortly after, in 1924, the sneakers went international with a German man named Adi Dassle who created the first Adidas sneaker, followed by his brother Rudi who started another famous sports shoe company: Puma.
+
+Although in the first part of the 20th century, sneakers were worn only by people practicing sports, in 1950s children, teens and young adults started wearing them as a fashion statement. Sneakers became even more famous after they appeared in movies such as "Rebel Without a Cause". Nowadays, sneakers have a place in almost everyone's wardrobe and they are  not considered as a shoe worn only during sports activities anymore. Although wearing sports shoes in our day-to-day life might be because of an increase in comfort level, the case is not that clear. What we can clearly notice is how fashion spreads gradually because of people emulating the behaviour of others. 
+
+An average 120,000,000 pairs of Nike shoes are sold each year according to \textit{Statistic Brain} [\citeyear{nike}] and the numbers are expected to rise. This is just one example where the people's "independence" assumption fails. There are numerous papers studying just this, how our decisions on where to live, what to wear, what to eat, etc. are influenced not only by the value of the goods, but by the choices people around us do. Some of the papers focus on some of the very serious problems of our society like dropping out of school, smoking, committing crimes. Here, we could mention \cite[]{crane}; \cite[]{evans}; and \cite[]{akerlof}. Also \cite[]{young} discuss A Dynamic Model of Conformity. However, to understand the complex system we know as \textit{society} and to understand why segregation still emerges in our society we have to look at the problem from all perspectives.  
+
+The "dual" situation is the one in which individuals do not change their behaviours, but they prefer to move to neighbourhoods where people have same interests as oneself. This is a model that was first published by \cite[]{schelling}. We are going to look at Schelling's linear model in detail in this paper. The two problems may seem completely different, but there are similar aggregate properties. We are going to see how segregated patterns (spatially homogeneous patterns) are more likely to emerge than heterogeneous patterns in a final configuration.
+
+\subsection{Motivation}
+A social network is a representation of social agents (such as individuals, organisations or software), a social connection and a social interaction between the agents. Understanding how relations between individuals and individual decision-making affect the system on a larger scale, it would enable us to predict how the system will evolve. This is important since we are interested in understanding the factors that lead to a segregated system in the future, in order to try and prevent such outcome.
+
+We live in a world where segregation, be it ethical or economical, is still present at every step, in all societies, even in developed, modern cities like London. There is a huge interest in finding a way to combat any further segregation, but this is not easy and the consequences of people's low tolerances can be seen everywhere. \textit{Poor doors: the segregation of London's inner-city flat dwellers} \cite[]{article1} and \textit{What would a ban on 'poor doors' achieve?} \cite[]{article2} are only two articles published by \cite[]{guardian} that are presenting serious concerns that people and governments have regarding the economic segregation that is happening in London, UK. 
+
+Osborne and Hill present in their articles a worrying phenomena that is currently happening in London: segregation created by new builds in Central London. Developers are obliged to provide a number of affordable homes when they draw up a new housing project. What was suppose to be a solution to the housing crisis and to combat segregation by keeping low-income residents in central London, lead to even steeper local segregation between the two groups of tenants. The affordable housing tenants are forced to use different entrances to the buildings, they do not have access to facilities such as car or bike parking and in some cases, even their bins and postal deliveries are being separated. The developers say that this is the only way to keep the price low for the low-income tenants since service charges to maintain facilities such as 24/7 reception desk are high. However, all these measures would lead to increasingly divided communities. Authorities, such as the Mayor or government could ban having this division between the two classes that live in the same building or in the same complex, but it could make the prices of "affordable" flats to increase, thereby removing low-income tenants. On a larger scale, it might seem that the segregation problem is solved since the poor and the rich live next-door to each other. However, when we look closely we see just how big the division between the two classes is. This shows us how complex the segregation problem is and how difficult it is to come up with good, practical solutions. We want to look at this persistent problem: the interrelationship between group and individual behaviour from a new perspective, making use of new computational model techniques.
+
+The housing crisis is just one example of how hard it is to create good laws or standards for a government or business. The act of creating laws is called the \textit{policy making}. There is a high volume of research needed behind the scenes before a new law gets to be realised. In Britain, \textit{The Centre for Policy Studies}\cite[]{policymaking} is one of the leading think-tanks, working with brilliant minds from all around the country to develop policies for politicians, media or anyone interested in public debate in Britain. They release regular publications designed to influence government policy. It is a research unit that focuses on complexity science and social simulation. In other words, they use social simulations (\verb|e.g.| multi-agent computational simulation) for informing politicians what to do, what laws to consider that are in the best interest for the country and its citizens. We will have a look at just what social simulation and computational modelling are and their importance in today's research. 
+
+
+
+\subsection{Objectives}
+
+Schelling's segregation model presents one of the earliest examples of social dynamics models. 
+In this project, we want to study and understand Schelling's segregation models, focusing on the linear model. We want to check whether some of Schelling's intuitions and simulation results can be rigorously justified. We will also going to use a model checker, \verb|NuSMV|, to automatically test some of the results. 
+
+Furthermore, we want to get a better understanding of why segregation could happen even if, as individuals, the people prefer to live in an integrated neighbourhood. We will look whether making small variations to Schelling's model, like relaxing or changing the turn function, will lead to different final configurations. We are interested in our final configurations to be \textit{stable} and the \textit{segregation problem to be minimal}. We want to use the model checker to find out whether non-segregated configurations can be reached and what path we have to follow to get there.
+
+
+\subsection{Contributions}
+This project makes the following contributions:
+\begin{itemize}
+    \item A formal definition and proof of convergence and termination of final configurations in a linear model;
+    \item Rigorous justification for Schelling's intuitions and simulation results when it comes to relaxing the turn function in order to ensure a stable final configuration;
+    \item A formal analysis of the impact of turn functions in linear segregation models;
+    \item An analysis of the degree of segregation of a configuration;
+    \item A computational multi-agent model checker of the linear model, using \verb|NuSMV|;
+    \item Testing convergence and complete segregation with the help of the \verb|NuSMV| model checker.
+\end{itemize}
+
+
+\subsection{Report Outline}
+\textbf{Chapter 2} presents a general background for our project. We start by discussing what complex systems are and look at the general idea of emergent properties of a system. Next, we look at the importance of computational models and how we use them to accelerate scientific discoveries. In particular, we  have a look at agent-based computational models with one example (Multi-Agent Bargaining Model) to emphasise how agent-based models work. Before we  go in detail and talk about Schelling's model in Chapter 3, we have a look at influence Schelling's model have had. Finally, we  discuss about the environment we used to automatically test Schelling's model and the reasoning behind our choice.
+
+\textbf{Chapter 3} focuses on the main paper we studied: Schelling's Dynamic Models Of Segregation, 1971. We start with an overview of the model followed by analysis of the paper. We look at the Spatial Proximity Models where we are mainly interested in the linear model. Next, we have a brief overview of the Bounded-Neighbourhood Model and Tipping Model.
+
+\textbf{Chapter 4} introduces some formal definitions for the multi-agents line model. We are formally describing the line model as a permutation, defining similarity and what we mean by configurations. We also give formal definitions for turn functions, neighbourhood and happiness. In the second part of Chapter 4, we analyse the impact of turn functions, starting with Schelling's turn function and moving into different turn functions with some examples. Lastly, in this chapter, we talk about convergence and stable configurations. We have a look at a few conjectures based on these definitions and sketch some proofs.
+
+\textbf{Chapter 5} presents in detail how \verb|NuSMV| model checker works and how we modeled our multi-agent line system. We also look into how we wrote the CTL Specifications to test \textit{convergence} and \textit{the level of segregation}. Finally, we have a brief look over the Python Script that is used to generate the \verb|.smv file| (our model) for a given number of agents, a neighbourhood size, and an initial configuration.
+
+\textbf{Chapter 6} focuses on the results we get regarding convergence and complete segregation of the system. We analyse the results and also give an overall evaluation of the computational model.
+
+\textbf{Chapter 6}, the final chapter, presents an overview of the project and discusses future work.
+
+Finally,  \textbf{Appendices} present an example of a \verb|.smv file| model for a specific configuration and an example of counter-example generated by \verb|NuSMV|.
+
+
+\end{document}

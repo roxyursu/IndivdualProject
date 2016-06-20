@@ -1,0 +1,52 @@
+\BOOKMARK [1][-]{section*.1}{Abstract}{}% 1
+\BOOKMARK [1][-]{section*.2}{Acknowledgements}{}% 2
+\BOOKMARK [1][-]{section*.3}{Contents}{}% 3
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 4
+\BOOKMARK [2][-]{subsection.1.1}{Motivation}{section.1}% 5
+\BOOKMARK [2][-]{subsection.1.2}{Objectives}{section.1}% 6
+\BOOKMARK [2][-]{subsection.1.3}{Contributions}{section.1}% 7
+\BOOKMARK [2][-]{subsection.1.4}{Report Outline}{section.1}% 8
+\BOOKMARK [1][-]{section.2}{General Background}{}% 9
+\BOOKMARK [2][-]{subsection.2.1}{Emergent Properties}{section.2}% 10
+\BOOKMARK [2][-]{subsection.2.2}{Computational models in social sciences}{section.2}% 11
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Segregation Overview}{subsection.2.2}% 12
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Computational models in general}{subsection.2.2}% 13
+\BOOKMARK [3][-]{subsubsection.2.2.3}{Agent-based models}{subsection.2.2}% 14
+\BOOKMARK [3][-]{subsubsection.2.2.4}{Multi-Agent Bargaining Model}{subsection.2.2}% 15
+\BOOKMARK [2][-]{subsection.2.3}{Schelling's Model Impact}{section.2}% 16
+\BOOKMARK [3][-]{subsubsection.2.3.1}{The Dynamics of Conformity - Peyton Young}{subsection.2.3}% 17
+\BOOKMARK [3][-]{subsubsection.2.3.2}{The Schelling Model of Ethnic Residential Dynamics: Beyond the Integrated - Segregated Dichotomy of Patterns }{subsection.2.3}% 18
+\BOOKMARK [3][-]{subsubsection.2.3.3}{A Wealth and Status-Based Model of Residential Segregation}{subsection.2.3}% 19
+\BOOKMARK [3][-]{subsubsection.2.3.4}{Parable of the Polygons }{subsection.2.3}% 20
+\BOOKMARK [2][-]{subsection.2.4}{Development environment}{section.2}% 21
+\BOOKMARK [1][-]{section.3}{Schelling's Model}{}% 22
+\BOOKMARK [2][-]{subsection.3.1}{Schelling's Dynamic Models Of Segregation - Overview}{section.3}% 23
+\BOOKMARK [2][-]{subsection.3.2}{How does the model work?}{section.3}% 24
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Spatial Proximity Models}{subsection.3.2}% 25
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Bounded-Neighbourhood Model}{subsection.3.2}% 26
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Tipping Model}{subsection.3.2}% 27
+\BOOKMARK [1][-]{section.4}{Formal Analysis}{}% 28
+\BOOKMARK [2][-]{subsection.4.1}{General Definitions}{section.4}% 29
+\BOOKMARK [2][-]{subsection.4.2}{On the impact of turn function}{section.4}% 30
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Turn function in Schelling's model}{subsection.4.2}% 31
+\BOOKMARK [3][-]{subsubsection.4.2.2}{Examples - Turn function impact}{subsection.4.2}% 32
+\BOOKMARK [2][-]{subsection.4.3}{Convergence }{section.4}% 33
+\BOOKMARK [3][-]{subsubsection.4.3.1}{Conjectures }{subsection.4.3}% 34
+\BOOKMARK [3][-]{subsubsection.4.3.2}{Sketched Proofs}{subsection.4.3}% 35
+\BOOKMARK [1][-]{section.5}{Implementation - Multi-Agent Computational Model}{}% 36
+\BOOKMARK [2][-]{subsection.5.1}{SMV Model}{section.5}% 37
+\BOOKMARK [2][-]{subsection.5.2}{CTL Specifications}{section.5}% 38
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Convergence}{subsection.5.2}% 39
+\BOOKMARK [3][-]{subsubsection.5.2.2}{Degree of Segregation}{subsection.5.2}% 40
+\BOOKMARK [2][-]{subsection.5.3}{Python Script}{section.5}% 41
+\BOOKMARK [1][-]{section.6}{Simulation and Evaluation}{}% 42
+\BOOKMARK [2][-]{subsection.6.1}{Computational Results}{section.6}% 43
+\BOOKMARK [3][-]{subsubsection.6.1.1}{Stability }{subsection.6.1}% 44
+\BOOKMARK [3][-]{subsubsection.6.1.2}{Degree of Segregation}{subsection.6.1}% 45
+\BOOKMARK [2][-]{subsection.6.2}{Evaluation}{section.6}% 46
+\BOOKMARK [1][-]{section.7}{Conclusion and Open Questions}{}% 47
+\BOOKMARK [2][-]{subsection.7.1}{Future work}{section.7}% 48
+\BOOKMARK [1][-]{subsection.7.1}{References}{}% 49
+\BOOKMARK [1][-]{section*.72}{Appendices}{}% 50
+\BOOKMARK [1][-]{Appendix.1.A}{.smv File Example}{}% 51
+\BOOKMARK [1][-]{Appendix.1.B}{Convergence - NuSMV Counter Example}{}% 52
